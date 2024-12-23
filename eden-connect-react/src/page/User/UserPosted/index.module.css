@@ -1,0 +1,23 @@
+#account-posted {
+  background-color: #202745;
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+  width: 100%;
+  padding: 1rem !important;
+}
+
+.posted-list {
+  width: 100%;
+  /* min-height: 100vh; */
+  height: auto;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+}
+
+.Pagination {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}

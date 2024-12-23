@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuki.common.mapper.UserFavoriteMapper">
+    <insert id="save">
+        insert into userfavorite(user_id, article_id,create_time)
+        values (#{userId}, #{articleId},#{createTime})
+    </insert>
+    <delete id="remove">
+        delete
+        from userfavorite
+        where article_id = #{articleId}
+          and user_id = #{userId}
+    </delete>
+
+
+    <select id="findOne" resultType="com.yuki.common.domain.entity.UserFavorite">
+        select *
+        from userfavorite
+        where user_id = #{userId}
+          and article_id = #{articleId}
+    </select>
+    <select id="findAllByUserId" resultType="com.yuki.common.domain.entity.Dto.ArticleDto">
+        select
+            a.id,
+            a.title,
+            a.summary,
+            a.category_tags,
+            a.thumbnail,
+            a.is_top,
+            a.status,
+            a.view_count,
+            a.like_count,
+            a.create_by,
+            a.create_time,
+            a.update_time,
+            u.username,
+            u.avatar
+        from userfavorite uf
+                 join article a on uf.article_id = a.id
+                 join sys_user u on a.create_by = u.id
+                 where user_id = #{userId}
+    </select>
+</mapper>

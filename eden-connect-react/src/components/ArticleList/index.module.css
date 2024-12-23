@@ -1,0 +1,10 @@
+.articleList {
+  margin-top: 16px;
+}
+
+.Pagination {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}

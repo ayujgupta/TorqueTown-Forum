@@ -1,0 +1,31 @@
+#accountPosted {
+  background-color: #202745;
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+  width: 100%;
+  padding: 1rem !important;
+}
+
+.postedList {
+  width: 100%;
+  /* min-height: 100vh; */
+  height: auto;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  /* background-color: #fff; */
+}
+
+.Pagination {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.nullDiv {
+  background-color: rgb(32, 39, 69);
+  height: 30rem;
+  text-align: center;
+  padding-top: 5rem;
+}

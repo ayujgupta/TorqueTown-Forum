@@ -1,0 +1,29 @@
+#recommend-layout {
+  width: 100%;
+  /* height: 100%; */
+}
+
+.recommend-context-1 {
+  height: 100%;
+  /* padding: 16px; */
+  width: 97%;
+}
+
+.recommend-context-2,
+.recommend-context-3 {
+  height: 100;
+  width: 100%;
+}
+
+.recommend-image {
+  width: 100%;
+  border-radius: 0.5rem;
+}
+
+.recommend-context-3 > .recommend-image {
+  max-height: 173px;
+}
+
+.recommend-image:hover {
+  cursor: pointer;
+}

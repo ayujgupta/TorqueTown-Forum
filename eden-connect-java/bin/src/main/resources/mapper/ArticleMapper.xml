@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuki.common.mapper.ArticleMapper">
+    <insert id="saveOne">
+        insert into article (title,
+                             content,
+                             summary,
+                             category_tags,
+                             thumbnail,
+                              create_by,
+                             create_time)
+        values (#{title},#{content},#{summary},#{category_tags},#{thumbnail},#{create_by},#{create_time})
+    </insert>
+    <insert id="saveLikeOne">
+        insert into articlelike(article_id, user_id, create_time)
+        VALUES (
+                #{articleId},
+                #{userId},
+                #{createTime}
+               )
+    </insert>
+    <update id="updateOne">
+        update article set
+                           title = #{title},
+                           content = #{content},
+                           summary = #{summary},
+                           category_tags = #{category_tags},
+                           thumbnail = #{thumbnail},
+                           create_by = #{create_by},
+                           create_time = #{create_time}
+        where id = #{id}
+    </update>
+    <update id="updateViewCount">
+        update article set view_count = view_count + 1 where id = #{articleId}
+    </update>
+    <update id="increaseLikeCount">
+        update article set like_count = like_count + 1 where id = #{articleId}
+    </update>
+    <update id="reduceLikeCount">
+        update article set like_count = like_count - 1 where id = #{articleId}
+    </update>
+    <update id="updateOneSetTop">
+        update article set
+                           is_top_update_time = #{time},
+                           is_top = 1
+                       where id = #{articleId}
+    </update>
+    <delete id="deleteOne">
+        update article set del_flag = 1
+            where id = #{articleId}
+    </delete>
+    <delete id="removeLikeOne">
+        delete from articlelike where user_id = #{userId} and article_id = #{articleId}
+    </delete>
+
+    <select id="findOne" resultType="com.yuki.common.domain.entity.Article">
+        select a.id,
+               a.title,
+               a.content,
+               a.summary,
+               a.category_tags,
+               a.thumbnail,
+               a.is_top,
+               a.status,
+               a.view_count,
+               a.like_count,
+               a.create_by,
+               a.create_time,
+               a.update_time,
+               u.username,
+               u.avatar
+        from article a
+                 join sys_user u on u.id = a.create_by
+        where a.del_flag = 0
+          and a.id = #{ArticleId}
+    </select>
+
+    <select id="findAll" resultType="com.yuki.common.domain.entity.Dto.ArticleDto">
+
+        select a.id,
+               a.title,
+               a.summary,
+               a.category_tags,
+               a.thumbnail,
+               a.is_top,
+               a.status,
+               a.view_count,
+               a.like_count,
+               a.create_by,
+               a.create_time,
+               a.update_time,
+               u.username,
+               u.avatar
+        from article a
+                 join sys_user u on u.id = a.create_by
+        where a.del_flag = 0
+        order by a.create_time DESC
+
+    </select>
+    <select id="findAllByUserId" resultType="com.yuki.common.domain.entity.Dto.ArticleDto">
+        select a.id,
+               a.title,
+               a.summary,
+               a.category_tags,
+               a.thumbnail,
+               a.is_top,
+               a.status,
+               a.view_count,
+               a.like_count,
+               a.create_by,
+               a.create_time,
+               a.update_time,
+               u.username,
+               u.avatar
+        from article a
+                 join sys_user u on u.id = a.create_by
+        where a.del_flag = 0
+          and a.create_by = #{userId}
+        order by a.create_time DESC
+    </select>
+    <select id="findLikeOne" resultType="com.yuki.common.domain.entity.Articlelike">
+        select * from articlelike where user_id = #{userId} and article_id = #{articleId}
+    </select>
+    <select id="findAllByKeyWord" resultType="com.yuki.common.domain.entity.Dto.ArticleDto">
+        select a.id,
+               a.title,
+               a.summary,
+               a.content,
+               a.category_tags,
+               a.thumbnail,
+               a.is_top,
+               a.status,
+               a.view_count,
+               a.like_count,
+               a.create_by,
+               a.create_time,
+               a.update_time,
+               u.username,
+               u.avatar
+        from article a
+                 join sys_user u on u.id = a.create_by
+        where a.del_flag = 0 and (
+            a.title like concat('%', #{keyword}, '%')
+            or
+            a.summary like concat('%', #{keyword}, '%')
+            or
+            a.content like concat('%', #{keyword}, '%')
+            or
+            a.category_tags like concat('%', #{keyword}, '%')
+            or
+            u.username like concat('%', #{keyword}, '%')
+            )
+        order by a.create_time DESC
+    </select>
+    <select id="findTopOne" resultType="com.yuki.common.domain.entity.Dto.ArticleDto">
+        select a.id,
+               a.title,
+               a.summary,
+               a.category_tags,
+               a.thumbnail,
+               a.is_top,
+               a.status,
+               a.view_count,
+               a.like_count,
+               a.create_by,
+               a.create_time,
+               a.update_time,
+               u.username,
+               u.avatar
+        from article a
+                 join sys_user u on u.id = a.create_by
+        where a.del_flag = 0
+          and a.is_top = 1
+        order by is_top_update_time desc limit 1
+    </select>
+
+
+</mapper>

@@ -1,0 +1,25 @@
+#tags-component {
+  max-height: 20rem;
+  width: 100%;
+  border-radius: 0.5rem;
+  background-color: #202745;
+  padding: 0.5rem;
+}
+
+.tags-icon {
+}
+
+.tags-div {
+}
+
+.tags-button-group {
+  height: 3rem;
+}
+
+.tag-button {
+  display: inline-block;
+  margin: 0 0.5rem;
+}
+
+.tag-button > button {
+}

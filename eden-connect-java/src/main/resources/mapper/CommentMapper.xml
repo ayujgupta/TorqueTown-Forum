@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuki.common.mapper.CommentMapper">
+    <insert id="save">
+        insert into comment(article_id, user_id, content, create_time, parent_id)
+        VALUES (#{article_id}, #{user_id}, #{content}, #{create_time}, #{parent_id})
+    </insert>
+    <insert id="addLikeOne">
+        insert into commentlike(comment_id, user_id, create_time)
+        VALUES (#{comment_id},#{user_id},#{create_time})
+    </insert>
+    <update id="removeOne">
+        update comment
+        set state = 0
+        where id = #{id}
+    </update>
+    <update id="IncreaseLikeCount">
+        update comment set like_count = like_count + 1 where id = #{commentId}
+    </update>
+    <update id="reduceLikeCount">
+        update comment set like_count = like_count - 1 where id = #{commentId}
+    </update>
+    <delete id="removeLikeOne">
+        delete from commentlike where comment_id = #{commentId} and user_id = #{userId}
+    </delete>
+    <select id="findOne" resultType="com.yuki.common.domain.entity.Comment">
+        select *
+        from comment
+        where id = #{id}
+          and state = 1
+    </select>
+    <select id="findAll" resultType="com.yuki.common.domain.entity.Dto.CommentDto">
+        select c.user_id,
+               c.create_time,
+               c.parent_id,
+               c.content,
+               c.article_id,
+               c.like_count,
+               c.id,
+                s.username,
+                s.avatar
+        from comment c
+            join sys_user s on s.id = c.user_id
+        where c.article_id = #{articleId}
+          and c.parent_id IS NULL
+          and c.state = 1
+
+    </select>
+    <select id="findReplies" resultType="com.yuki.common.domain.entity.Dto.CommentDto">
+        select
+            c.user_id,
+            c.create_time,
+            c.parent_id,
+            c.content,
+            c.article_id,
+            c.id,
+            c.like_count,
+            s.username,
+            s.avatar
+        from comment c
+            join sys_user s on s.id = c.user_id
+        where parent_id = #{parentId}
+          and c.state = 1
+    </select>
+    <select id="findLikeOne" resultType="com.yuki.common.domain.entity.Commentlike">
+        select * from commentlike where user_id = #{userId} and comment_id = #{commentId}
+    </select>
+</mapper>

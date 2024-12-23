@@ -1,0 +1,15 @@
+#advertise-aside {
+  border-radius: 0.5rem;
+  width: auto;
+  max-height: 10rem;
+}
+
+.advertise-aside-image {
+  border-radius: 0.5rem;
+  width: 100%;
+  max-height: 10rem;
+}
+
+.advertise-aside-image:hover {
+  cursor: pointer;
+}

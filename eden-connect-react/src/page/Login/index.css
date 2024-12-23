@@ -1,0 +1,16 @@
+.login-box {
+  background: rgba(218, 235, 245, 0.5);
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.forgot-link,
+.signup-link {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.forgot-link:hover,
+.signup-link:hover {
+  text-decoration: underline;
+}

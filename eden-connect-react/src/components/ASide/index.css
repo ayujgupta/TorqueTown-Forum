@@ -1,0 +1,10 @@
+#aside {
+  min-height: 100vh;
+  /* background-color: pink; */
+  border-radius: 0.5rem;
+}
+
+.aside-placeholder {
+  width: auto;
+  height: 2.5rem;
+}

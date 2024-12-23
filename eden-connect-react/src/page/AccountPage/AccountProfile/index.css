@@ -1,0 +1,60 @@
+.profile-container {
+  background-color: #202745;
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+  width: 100%;
+  padding: 1rem !important;
+  margin-bottom: 10rem;
+}
+
+.title {
+  color: #fff;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #2e3553;
+  margin-bottom: 0.5rem;
+}
+
+.avatar-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.custom-avatar,
+.default-avatar {
+  margin-right: 0.5rem;
+}
+
+.custom-avatar {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+
+.default-avatar {
+  width: 50px;
+  height: 50px;
+  background-color: #757575;
+}
+
+.MuiTextField-root {
+  border-radius: 4px;
+}
+
+.MuiInputBase-root {
+  color: white;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border-color: #2f3964;
+  color: white;
+}
+
+.account-profile-summit {
+  background-color: #2e3969 !important;
+}
+
+.account-profile-summit:hover {
+  background-color: #3a467b !important;
+}

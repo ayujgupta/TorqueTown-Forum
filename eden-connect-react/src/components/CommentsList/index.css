@@ -1,0 +1,41 @@
+#comment-list {
+  margin: 1rem 0;
+  width: 100%;
+  background-color: #202745;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.post-comment-div {
+  padding: 0 1rem;
+}
+
+.post-comment-info {
+  border-radius: 0.5rem;
+  /* margin: 1rem auto; */
+  padding: 5px;
+}
+
+.post-comment-info > span {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  color: white;
+  font-size: 14px;
+}
+
+.input-div {
+  margin-bottom: 1.2rem;
+}
+
+.post-commend-div {
+  text-align: right;
+  margin: 1rem 0;
+}
+
+.Pagination {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}

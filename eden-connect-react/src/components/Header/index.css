@@ -1,0 +1,27 @@
+.header-top {
+  height: 110px;
+  /* overflow: hidden; */
+  background-color: #202745;
+  /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); 下方阴影 */
+  margin-bottom: 3rem;
+}
+
+.header {
+  width: 100%;
+  z-index: 1;
+}
+
+.header-app-bar {
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* 下方阴影 */
+}
+
+.MuiContainer-root {
+  padding: 0 !important;
+}
+.MuiToolbar-root {
+  /* todo 移动端适配问题 */
+  padding: 0 !important;
+}
+.logo-and-search {
+  margin-bottom: -10px !important;
+}

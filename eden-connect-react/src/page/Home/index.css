@@ -1,0 +1,15 @@
+#main {
+  min-height: 100vh;
+  height: auto;
+  /* padding: 0 8rem; */
+  border-radius: 1rem;
+  background-color: #182039;
+}
+
+.main-body {
+  width: 100%;
+  min-height: 100vh;
+  border-radius: 0.5rem;
+  background-color: #202745;
+  padding: 1rem;
+}
