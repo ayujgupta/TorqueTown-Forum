@@ -3,8 +3,8 @@ import Grid from "@mui/material/Grid2";
 
 function Recommend() {
   const recommend1 = "http://localhost:7777/upload/img/76081770_p0.jpg";
-  const recommend2 = "http://localhost:7777/upload/img/c102-15.png";
-  const recommend3 = "http://localhost:7777/upload/img/57793944_p0.png";
+  const recommend2 = "http://localhost:7777/upload/img/c102-15.jpg";
+  const recommend3 = "http://localhost:7777/upload/img/57793944_p0.jpg";
 
   return (
     <Grid container spacing={2} id="recommend-layout">
@@ -43,6 +43,7 @@ function Recommend() {
               loading="lazy"
               src={recommend3}
               alt=""
+              style={{ Height: "100%" }}
             />
           </div>
         </Grid>

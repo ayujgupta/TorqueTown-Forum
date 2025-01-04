@@ -26,13 +26,17 @@ function UserMenu({ userinfo }) {
       {/* 用户菜单 */}
       <Grid container>
         <div id="account-menu">
+          
           <Grid className="account-avatar">
+          
             <Avatar
               sx={{ width: 96, height: 96 }}
               alt="User"
               src={userinfo.avatar}
             />
+            
           </Grid>
+          
           <Grid className="account-menu-list">
             {/* {/* <div className="aside-placeholder"></div> */}
             <div className="aside-placeholder"></div>
@@ -42,7 +46,7 @@ function UserMenu({ userinfo }) {
                 onClick={goProfile}
                 className="account-menu-list-button"
               >
-                个人资料
+                Personal Info
               </Button>
             </Grid>
             <Grid size={12}>
@@ -51,7 +55,7 @@ function UserMenu({ userinfo }) {
                 onClick={goPosted}
                 className="account-menu-list-button"
               >
-                用户文章
+                Articles
               </Button>
             </Grid>
           </Grid>

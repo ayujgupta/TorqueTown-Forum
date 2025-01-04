@@ -72,7 +72,7 @@ function ArticleList() {
 
   return (
     <>
-      <Typography variant="h6">最新文章</Typography>
+      <Typography variant="h6">Latest Articles</Typography>
       <div className={style.articleList}>
         {!isLoading
           ? articleList.map((item) => (

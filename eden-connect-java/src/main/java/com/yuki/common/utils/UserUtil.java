@@ -11,4 +11,9 @@ public class UserUtil {
         return loginUser.getEmail();
     }
 
+    public static Long getUserID(){
+        LoginUser loginUser = (LoginUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return loginUser.getUserId();
+    }
+
 }

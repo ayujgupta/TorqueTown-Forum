@@ -103,7 +103,7 @@ function CommentsList({ articleId }) {
         <div className="input-div">
           <TextField
             id="outlined-multiline-static"
-            label="请输入评论.."
+            label="Please enter a comment.."
             multiline
             fullWidth
             rows={4}
@@ -117,7 +117,7 @@ function CommentsList({ articleId }) {
             variant="contained"
             endIcon={<SendIcon />}
           >
-            发表评论
+            Leave a Comment
           </Button>
         </div>
       </div>

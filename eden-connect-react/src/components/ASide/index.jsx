@@ -21,9 +21,9 @@ function ASide() {
       {/* Tags */}
       {/* <TagsComponent></TagsComponent>
       <div className="aside-placeholder"></div> */}
-      {/* 热门文章 */}
-      <HotArticles></HotArticles>
-      <div className="aside-placeholder"></div>
+      {/* Popular Articles */}
+      {/* <HotArticles></HotArticles> */}
+      {/* <div className="aside-placeholder"></div> */}
     </div>
   );
 }

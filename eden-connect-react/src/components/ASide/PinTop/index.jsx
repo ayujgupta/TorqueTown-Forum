@@ -14,13 +14,13 @@ function PinTop() {
   const [article, setArticle] = useState(null);
   const navigate = useNavigate();
 
-  // 获取置顶文章
+  // Get pinned articles
   useEffect(() => {
     request.get("/article/top").then((res) => {
       if (res.data.code === 200) {
         setArticle(res.data.data);
       } else {
-        console.log("获取置顶文章失败");
+        console.log("Failed to get the pinned article");
       }
     });
   }, []);
@@ -41,7 +41,7 @@ function PinTop() {
           style={{ display: "flex", alignItems: "center", marginBottom: 8 }}
         >
           <Assessment style={{ marginRight: 8 }}></Assessment>
-          置顶文章
+          Pinned Article
         </Typography>
       </div>
 
@@ -61,7 +61,7 @@ function PinTop() {
               >
                 <Avatar alt="User" src={article.avatar} />
               </IconButton>
-              {/* 文章标题 */}
+              {/* Title */}
               <span>{article.title}</span>
               {/* 文章数据 */}
               <div style={{ display: "flex", alignItems: "center" }}>
@@ -70,14 +70,14 @@ function PinTop() {
                 &nbsp;&nbsp;
                 <span style={{ color: "#ddd", fontSize: 14 }}>
                   {" "}
-                  {article.like_count} 赞
+                  {article.like_count} Like
                 </span>
                 &nbsp;&nbsp;
                 <LocalFireDepartment></LocalFireDepartment>
                 &nbsp;&nbsp;
                 <span style={{ color: "#ddd", fontSize: 14 }}>
-                  {" "}
-                  {article.view_count} 阅读量
+                  {/* {" "} */}
+                  {article.view_count} Read
                 </span>
               </div>
             </div>

@@ -36,7 +36,7 @@ function Login() {
           setToken(res.data.data.token);
           // 登录成功后获取用户信息存到mobx里面
           userStore.setUser(res.data.data.userInfo);
-          navigate("/", { replace: true });
+          setTimeout( navigate("/", { replace: true }),2000);
         } else {
           // 登录失败
           setErrorMessage(res.data.msg);
@@ -44,7 +44,7 @@ function Login() {
         }
       })
       .catch((err) => {
-        setErrorMessage("登录错误");
+        setErrorMessage("Login Error: ");
         setOpenErr(true);
       });
   }
@@ -61,7 +61,7 @@ function Login() {
             Login
           </Typography>
           <TextField
-            label="邮箱"
+            label="Username/Email"
             fullWidth
             margin="normal"
             value={email}
@@ -77,7 +77,7 @@ function Login() {
             }}
           />
           <TextField
-            label="密码"
+            label="Password"
             type="password"
             fullWidth
             margin="normal"

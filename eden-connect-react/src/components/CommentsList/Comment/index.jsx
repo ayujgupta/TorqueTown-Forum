@@ -117,7 +117,7 @@ function Comment({ comment, currentPage, getComment, articleId }) {
       })
       .catch((err) => {
         setIsLikeLoading(false);
-        setErrorMessage("点赞失败");
+        setErrorMessage("点Like失败");
         setOpenErr(true);
       });
   }
@@ -195,14 +195,14 @@ function Comment({ comment, currentPage, getComment, articleId }) {
                       }
                       size="small"
                     >
-                      点赞({commentInfo.like_count})
+                      Like ({commentInfo.like_count})
                     </LoadingButton>
                     <Button
                       onClick={toggleAccordion}
                       startIcon={<ChatIcon />}
                       size="small"
                     >
-                      回复
+                      reply
                     </Button>
                     {userInfo?.id === commentInfo.user_id ? (
                       <LoadingButton

@@ -145,13 +145,13 @@ function AccountProfile() {
   return (
     <Container className="profile-container">
       <Typography variant="h5" className="title">
-        个人资料
+      Personal Info
       </Typography>
 
       {userInfo ? (
         <>
           <Box mb={2}>
-            <label>昵称</label>
+            <label>Nickname</label>
             <TextField
               value={userInfo.username}
               onChange={usernameChange}
@@ -162,10 +162,10 @@ function AccountProfile() {
           </Box>
 
           <Box mb={2}>
-            <label>账号ID</label>
+            <label>UserID</label>
             <TextField
               fullWidth
-              // label="账号ID"
+              // label="UserID"
               variant="outlined"
               size="small"
               defaultValue={userInfo.id}
@@ -174,7 +174,7 @@ function AccountProfile() {
           </Box>
 
           <Box mb={2} className="avatar-section">
-            <label>头像</label>
+            <label>Avatar</label>
             <RadioGroup
               row
               aria-labelledby="demo-row-radio-buttons-group-label"
@@ -196,7 +196,7 @@ function AccountProfile() {
                 onClick={() => setIsDefaultAvatar(false)}
                 value="custom"
                 control={<Radio />}
-                label="自定义"
+                label="Customize"
               />
               <Avatar
                 className="default-avatar"
@@ -206,7 +206,7 @@ function AccountProfile() {
                 onClick={() => setIsDefaultAvatar(true)}
                 value="default"
                 control={<Radio />}
-                label="默认"
+                label="Default"
               />
             </RadioGroup>
 
@@ -230,7 +230,7 @@ function AccountProfile() {
           <Box mb={2}>
             <TextField
               fullWidth
-              label="个性签名"
+              label="Signature"
               variant="outlined"
               size="small"
               multiline
@@ -254,7 +254,7 @@ function AccountProfile() {
           },
         }}
       >
-        保存资料
+        Save
       </LoadingButton>
     </Container>
   );

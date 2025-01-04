@@ -12,7 +12,7 @@ function HotArticles() {
           variant="h6"
           style={{ display: "flex", alignItems: "center", marginBottom: 8 }}
         >
-          <Chat style={{ marginRight: 8 }}></Chat>热门文章
+          <Chat style={{ marginRight: 8 }}></Chat>Popular Articles
         </Typography>
       </div>
       <div className="hot-article">
@@ -28,18 +28,18 @@ function HotArticles() {
               src="https://s2.loli.net/2023/09/11/XRI6tAPH7TxQKJr.jpg"
             />
           </IconButton>
-          {/* 文章标题 */}
-          <span>关于本站</span>
+          {/* Title */}
+          <span>About this site</span>
           {/* 文章数据 */}
           <div style={{ display: "flex", alignItems: "center" }}>
             &nbsp;&nbsp;
             <ThumbUpAlt></ThumbUpAlt>
             &nbsp;&nbsp;
-            <span style={{ color: "#ddd", fontSize: 14 }}> 1 赞</span>
+            <span style={{ color: "#ddd", fontSize: 14 }}> 1 Like</span>
             &nbsp;&nbsp;
             <LocalFireDepartment></LocalFireDepartment>
             &nbsp;&nbsp;
-            <span style={{ color: "#ddd", fontSize: 14 }}> 1 阅读量</span>
+            <span style={{ color: "#ddd", fontSize: 14 }}> 1 Read</span>
           </div>
         </div>
       </div>

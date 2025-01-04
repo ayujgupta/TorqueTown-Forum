@@ -6,9 +6,10 @@ function Advertise() {
       <img
         className="advertise-aside-image"
         loading="lazy"
-        src="https://s2.loli.net/2024/10/26/Ap5QlMmx9U3XPtE.jpg"
+        src="https://images.hindustantimes.com/auto/img/2024/09/21/1600x900/Windsor_EV_1726898438105_1726898617131.jpg"
         alt="AD"
       />
+        <div className="ad-overlay">Sponsored</div>
     </div>
   );
 }

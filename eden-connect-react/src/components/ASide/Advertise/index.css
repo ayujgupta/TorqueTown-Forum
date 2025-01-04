@@ -1,7 +1,9 @@
 #advertise-aside {
+  position: relative; /* Required for the overlay to position correctly */
   border-radius: 0.5rem;
   width: auto;
   max-height: 10rem;
+  overflow: hidden; /* Ensures no content spills outside the container */
 }
 
 .advertise-aside-image {
@@ -12,4 +14,16 @@
 
 .advertise-aside-image:hover {
   cursor: pointer;
+}
+.ad-overlay {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
+  color: white;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 5px;
+  pointer-events: none; /* Prevent clicks on the overlay */
+  z-index: 1; /* Ensure it appears above the image */
 }

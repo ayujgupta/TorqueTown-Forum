@@ -1,6 +1,8 @@
 import axios from "axios";
 import { getToken, removeToken, removeUser } from "./token";
+// import { useNavigate } from 'react-router-dom';
 
+// const nav=useNavigate();
 const request = axios.create({
   baseURL: "http://localhost:7777",
   timeout: 5000,
@@ -26,14 +28,18 @@ request.interceptors.response.use(
     // 对响应错误做点什么
     if (error.response) {
       console.log(error.response);
-
+      
       // 使用 status 而不是 code
-      if (error.response.status === 401) {
-        alert("用户未认证");
+      const token = getToken();
+     console.log(token!=null  && error.response.status === 401);
+      if (token!=null  && error.response.status === 401) {
+        alert(error.response.data.message);
         removeToken();
         removeUser();
-        // window.location.href = "/login"; // 重定向到登录页面
-        history.push("/login");
+        
+        window.location.href = "/login"; // 重定向到登录页面
+        // history.push("/login");
+        // navigate("/login");
       }
     } else {
       console.log("无响应");

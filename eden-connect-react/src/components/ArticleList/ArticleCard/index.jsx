@@ -35,7 +35,7 @@ function ArticleCard({ article }) {
         />
 
         <CardContent>
-          {/* 文章标题 */}
+          {/* Title */}
           <Typography
             variant="h6"
             style={{ fontSize: "16px" }}

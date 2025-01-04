@@ -11,3 +11,15 @@
   max-width: 100%;
   height: auto;
 }
+
+.img-responsive {
+  max-width: 80%;              /* Image will occupy a maximum of 80% of the container */
+  height: auto;                /* Maintain aspect ratio */
+  display: block;              /* Removes space below the image */
+  margin: 10px auto;           /* Centers the image with some margin */
+  object-fit: contain;         /* Ensures the image doesn't get stretched */
+  border-radius: 5px;          /* Optional: Add rounded corners to images */
+}
+.MuiLoadingButton-loadingIndicator {
+  display: flex !important; /* Ensure it is visible */
+}

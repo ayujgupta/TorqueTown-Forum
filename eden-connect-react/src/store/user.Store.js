@@ -26,7 +26,7 @@ class userStore {
     this.userInfo = userInfo;
     this.isLogin = true;
     setUser(userInfo);
-    console.log("更新用户信息");
+    console.log("User Info updated");
   }
   clearUser() {
     this.userInfo = null;

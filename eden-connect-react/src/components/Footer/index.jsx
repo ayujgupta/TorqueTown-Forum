@@ -11,10 +11,10 @@ function Footer() {
     >
       <Container maxWidth="lg">
         <Typography variant="body2" align="center">
-          &copy; {new Date().getFullYear()} C59z All rights reserved.
+          &copy; {new Date().getFullYear()} Ayuj Gupts All rights reserved.
         </Typography>
         <Typography variant="body2" align="center" sx={{ mt: 2 }}>
-          <Link href="https://github.com/c59z" color="inherit" sx={{ mx: 1 }}>
+          <Link href="https://github.com/ayujgupta" color="inherit" sx={{ mx: 1 }}>
             GitHub
           </Link>
         </Typography>

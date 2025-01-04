@@ -13,6 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // todo 集中管理绝对路径
         registry.addResourceHandler("/upload/**")
-                .addResourceLocations("file:/Users/ayujgupta/Documents/project/EdenConnect/eden-connect-java/src/main/resources/upload/img");
+                .addResourceLocations("file:/Users/ayujgupta/Documents/project/EdenConnect/eden-connect-java/src/main/resources/upload/img","file:/Users/ayujgupta/Documents/project/EdenConnect/eden-connect-java/src/main/resources/upload/avatar");
+                
     }
 }

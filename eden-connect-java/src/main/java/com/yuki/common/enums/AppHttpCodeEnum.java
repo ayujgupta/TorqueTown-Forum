@@ -2,16 +2,18 @@ package com.yuki.common.enums;
 
 public enum AppHttpCodeEnum {
     // 成功
-    SUCCESS(200,"操作成功"),
+    SUCCESS(200,"Success"),
     // 登录
-    NEED_LOGIN(401,"需要登录后操作"),
-    NO_OPERATOR_AUTH(403,"无权限操作"),
-    SYSTEM_ERROR(500,"出现错误"),
-    USERNAME_EXIST(501,"用户名已存在"),
-    PHONENUMBER_EXIST(502,"手机号已存在"), EMAIL_EXIST(503, "邮箱已存在"),
-    REQUIRE_USERNAME(504, "必需填写用户名"),
-    CONTENT_NOT_NULL(506,"评论内容不能为空"),
-    LOGIN_ERROR(505,"用户名或密码错误");
+    NEED_LOGIN(401,"Unauthorized"),
+    NO_OPERATOR_AUTH(403,"Permission Denied"),
+    SYSTEM_ERROR(500,"An Error Occured"),
+    USERNAME_EXIST(501,"Username already exists"),
+    PHONENUMBER_EXIST(502,"Mobile Number already registered"),
+     EMAIL_EXIST(503, "Emaail already registered"),
+    REQUIRE_USERNAME(504, "Username is required"),
+    CONTENT_NOT_NULL(506,"Comment Cannot be Empty"),
+    LOGIN_ERROR(505,"用户名或密码错误"),
+    TOKEN_EXPIRED(409,"Token Expired. Login Again.");
 
     int code;
     String msg;

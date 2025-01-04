@@ -37,7 +37,7 @@ function AccountPosted() {
     <div id={style.accountPosted}>
       <div className="account-posted-title">
         <Typography variant="h5" className="title">
-          用户文章
+          My Articles
         </Typography>
       </div>
       <div className={style.postedList}>
@@ -53,7 +53,7 @@ function AccountPosted() {
         </Grid>
 
         {article.length === 0 && (
-          <div className={style.nullDiv}>未收藏任何文章</div>
+          <div className={style.nullDiv}>No Favourite Articles</div>
         )}
 
         <div className={style.Pagination}>

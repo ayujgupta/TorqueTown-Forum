@@ -37,7 +37,7 @@ function AccountFavorites() {
     <div id={style.accountFavorites}>
       <div className="account-favorites-title">
         <Typography variant="h5" className="title">
-          我的收藏
+          My Collection
         </Typography>
       </div>
       <div className={style.favoritesList}>
@@ -54,7 +54,7 @@ function AccountFavorites() {
         </Grid>
 
         {article.length === 0 && (
-          <div className={style.nullDiv}>未收藏任何文章</div>
+          <div className={style.nullDiv}>No Favourite Articles</div>
         )}
 
         <div className={style.Pagination}>

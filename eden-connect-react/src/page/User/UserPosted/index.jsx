@@ -39,7 +39,7 @@ function UserPosted({ userId }) {
     <div id="account-posted">
       <div className="account-posted-title">
         <Typography variant="h5" className="title">
-          用户文章
+          Articles
         </Typography>
       </div>
       <div className="posted-list">

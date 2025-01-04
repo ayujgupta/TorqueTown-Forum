@@ -67,11 +67,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(permitAllList).permitAll()
                 .antMatchers(anonymousList).anonymous()
-                // 除上面外的所有请求全部需要鉴权认证
+                // All requests except the above require authentication and authentication
                 .anyRequest().authenticated();
-        // 把token校验过滤器添加到过滤器链中
+        // Add the token validation filter to the filter chain
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-        // 设置全局异常捕获
+        // Set global exception catching
         http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).
                 accessDeniedHandler(accessDeniedHandler);
         //允许跨域

@@ -24,6 +24,7 @@ import { request } from "../../utils";
 import "./index.css";
 
 function Header() {
+  const logoURL = "http://localhost:7777/upload/img/logo.png";
   const { userStore } = useStore();
   const [userInfo, setUserInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -137,11 +138,11 @@ function Header() {
           }}
         >
           {/* MenuItem 选项 */}
-          <MenuItem onClick={goProfile}>个人资料</MenuItem>
-          <MenuItem onClick={goFavorites}>我的收藏</MenuItem>
-          <MenuItem onClick={goPosted}>用户文章</MenuItem>
-          <MenuItem onClick={goSecurity}>账户安全</MenuItem>
-          <MenuItem onClick={logout}>安全登出</MenuItem>
+          <MenuItem onClick={goProfile}>Personal Info</MenuItem>
+          <MenuItem onClick={goFavorites}>My Collection</MenuItem>
+          <MenuItem onClick={goPosted}>My Articles</MenuItem>
+          <MenuItem onClick={goSecurity}>Account security</MenuItem>
+          <MenuItem onClick={logout}>Logout</MenuItem>
         </Menu>
       )}
     </>
@@ -168,7 +169,7 @@ function Header() {
           }}
         >
           {/* MenuItem 选项 */}
-          <MenuItem onClick={goLogin}>用户登录</MenuItem>
+          <MenuItem onClick={goLogin}>Login</MenuItem>
         </Menu>
       )}
     </>
@@ -186,6 +187,7 @@ function Header() {
               component="div"
               sx={{ flexGrow: 1, paddingLeft: 1 }}
             >
+              {/* <img src={logoURL} alt="Logo" style={{ height: '40px' }} /> */}
               LOGO
             </Typography>
 
@@ -193,7 +195,7 @@ function Header() {
             <TextField
               size="small"
               id="outlined-basic"
-              label="搜索感兴趣的知识和文章"
+              label="Search"
               variant="outlined"
               onChange={inputChange}
               slotProps={{
@@ -216,7 +218,7 @@ function Header() {
               color="inherit"
               startIcon={<Home></Home>}
             >
-              首页
+              Home
             </Button>
             {/* <Button color="inherit">源码分享</Button>
             <Button color="inherit">教程工具</Button> */}
@@ -237,7 +239,7 @@ function Header() {
               color="inherit"
               startIcon={<PostAddIcon></PostAddIcon>}
             >
-              发布文章
+              Post an Article
             </Button>
 
             {getToken() ? userDiv : guestDiv}

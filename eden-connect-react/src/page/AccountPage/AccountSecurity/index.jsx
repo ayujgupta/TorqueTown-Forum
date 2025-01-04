@@ -39,11 +39,11 @@ function AccountSecurity() {
   function updatePassword() {
     if (passwordOld.trim() === "") {
       setOpenErr(true);
-      setErrorMessage("原密码不能为空");
+      setErrorMessage("The current password cannot be empty");
     }
     if (passwordNew.trim() === "") {
       setOpenErr(true);
-      setErrorMessage("新密码不能为空");
+      setErrorMessage("The new password cannot be empty");
     }
     if (passwordConfirm.trim() !== passwordNew.trim()) {
       setOpenErr(true);
@@ -76,16 +76,16 @@ function AccountSecurity() {
   return (
     <Container id="account-security">
       <Typography variant="h5" className="title">
-        账号安全
+      Account security
       </Typography>
 
       {/* 修改密码 */}
       <Typography variant="h6" style={{ marginTop: 2, marginBottom: 2 }}>
-        修改密码
+      Change password
       </Typography>
 
       <Box mb={2}>
-        <label>原密码</label>
+        <label>Current Password</label>
         <TextField
           value={passwordOld}
           onChange={(e) => setPasswordOld(e.target.value)}
@@ -97,7 +97,7 @@ function AccountSecurity() {
       </Box>
 
       <Box mb={2}>
-        <label>新密码</label>
+        <label>New Password</label>
         <TextField
           value={passwordNew}
           onChange={(e) => setPasswordNew(e.target.value)}
@@ -109,7 +109,7 @@ function AccountSecurity() {
       </Box>
 
       <Box mb={2}>
-        <label>确认密码</label>
+        <label>Confirm Password</label>
         <TextField
           value={passwordConfirm}
           onChange={(e) => setPasswordConfirm(e.target.value)}
@@ -126,16 +126,16 @@ function AccountSecurity() {
           variant="contained"
           endIcon={<LockIcon />}
         >
-          修改密码
+          Change password
         </Button>
       </div>
 
       {/* 绑定邮箱 */}
       <Typography variant="h6" style={{ borderTop: "2px solid #2e3553" }}>
-        绑定邮箱
+        Update Email
       </Typography>
       <Box mb={2}>
-        <label>邮箱</label>
+        <label>Username/Email</label>
         <TextField type="email" fullWidth variant="outlined" size="small" />
       </Box>
       <div className="post-commend-div">
@@ -144,7 +144,7 @@ function AccountSecurity() {
           variant="contained"
           endIcon={<MailOutlineIcon />}
         >
-          发送验证码
+          Send verification code
         </Button>
       </div>
       <Typography

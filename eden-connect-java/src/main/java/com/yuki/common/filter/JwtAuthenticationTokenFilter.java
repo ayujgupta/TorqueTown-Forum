@@ -1,9 +1,12 @@
 package com.yuki.common.filter;
 
 import com.yuki.common.domain.entity.LoginUser;
+import com.yuki.common.handler.CustomException;
 import com.yuki.common.utils.JwtUtil;
 import com.yuki.common.utils.RedisCache;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,7 +30,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private RedisCache redisCache;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException,CustomException {
         //获取token
         String token = request.getHeader("token");
         if (!StringUtils.hasText(token)) {
@@ -40,9 +43,19 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         try {
             Claims claims = JwtUtil.parseJWT(token);
             userid = claims.getSubject();
+        } catch (ExpiredJwtException e) {
+            // Token is expired
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"message\": \"Session expired. Please log in again.\"}");
+            // throw new CustomException(401,"Token expired. Please log in again.");
+            return;
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("token非法");
+            // Any other token parsing errors
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"message\": \"Invalid token.\"}");
+            return;
         }
         //从redis中获取用户信息
         String redisKey = "loginUser:" + userid;

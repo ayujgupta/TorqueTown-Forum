@@ -23,7 +23,7 @@ function Article({ article }) {
           </Grid>
           <Grid size={8}>
             <Stack spacing={3}>
-              {/* 文章标题 */}
+              {/* Title */}
               <div>
                 <Typography
                   className="article-list-title"
@@ -36,7 +36,7 @@ function Article({ article }) {
                 </Typography>
               </div>
 
-              {/* 文章简介 */}
+              {/* Introduction */}
               <div>
                 <Typography className="article-list-subtitle" variant="body1">
                   {article.summary}
@@ -63,7 +63,7 @@ function Article({ article }) {
                   </span>{" "}
                   &nbsp;&nbsp;|&nbsp;&nbsp;
                   <span> {article.create_time}</span> &nbsp;&nbsp;|&nbsp;&nbsp;
-                  <span>阅读量: {article.view_count}</span>
+                  <span>Read By: {article.view_count}</span>
                 </Typography>
               </div>
             </Stack>

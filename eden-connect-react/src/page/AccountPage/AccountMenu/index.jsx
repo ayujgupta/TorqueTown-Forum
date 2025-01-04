@@ -62,7 +62,7 @@ function AccountMenu() {
                 onClick={goProfile}
                 className="account-menu-list-button"
               >
-                个人资料
+                Personal Info
               </Button>
             </Grid>
             <Grid size={12}>
@@ -71,7 +71,7 @@ function AccountMenu() {
                 onClick={goFavorites}
                 className="account-menu-list-button"
               >
-                我的收藏
+                My Collection
               </Button>
             </Grid>
             <Grid size={12}>
@@ -80,7 +80,7 @@ function AccountMenu() {
                 onClick={goPosted}
                 className="account-menu-list-button"
               >
-                用户文章
+                My Articles
               </Button>
             </Grid>
             <Grid size={12}>
@@ -89,13 +89,13 @@ function AccountMenu() {
                 onClick={goSecurity}
                 className="account-menu-list-button"
               >
-                账号安全
+                Account security
               </Button>
             </Grid>
             <div className="aside-placeholder"></div>
             <Grid size={12}>
               <Button onClick={logout} className="account-menu-list-logout">
-                安全退出
+                Logout
               </Button>
             </Grid>
           </Grid>

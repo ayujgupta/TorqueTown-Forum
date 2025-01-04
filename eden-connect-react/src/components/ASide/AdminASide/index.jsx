@@ -18,7 +18,7 @@ function AdminASide() {
       if (res.data.code === 200) {
         setInfo(res.data.data);
       } else {
-        console.log("获取管理员信息失败");
+        console.log("Failed to obtain administrator information");
       }
     });
   }, []);
@@ -36,7 +36,7 @@ function AdminASide() {
             style={{ display: "flex", alignItems: "center" }}
           >
             <AccountCircle style={{ marginRight: 8 }}></AccountCircle>
-            管理员
+            Admins
           </Typography>
 
           <div className="admin-info-div">
@@ -54,7 +54,7 @@ function AdminASide() {
               }}
             >
               <span>{info.info.username}</span>
-              <span style={{ color: "#aaa" }}>文章 {info.count} 篇</span>
+              <span style={{ color: "#aaa" }}>Total Articles: {info.count} </span>
             </div>
           </div>
           <Divider sx={{ borderColor: "#2e3553 ", marginBottom: 1 }}></Divider>

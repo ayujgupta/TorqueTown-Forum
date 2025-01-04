@@ -16,14 +16,20 @@ import { useNavigate } from "react-router-dom";
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
+  const [passError, setPassError] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [confError, setConfError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const [openErr, setOpenErr] = useState(false);
   const [openInfo, setOpenInfo] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [infoMessage, setInfoMessage] = useState("");
+  const emailRegex = /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$/;
+  const passRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
   function registerUser() {
     setIsLoading(true);
@@ -39,13 +45,15 @@ function Login() {
           setPassword("");
           setConfirm("");
           setOpenInfo(true);
-          setInfoMessage("注册成功,请登录");
+          setInfoMessage("Registration successful, please log in");
+          // navigate("/");
         } else {
           setOpenErr(true);
           setErrorMessage(res.data.msg);
         }
         setIsLoading(false);
       })
+      // eslint-disable-next-line no-unused-vars
       .catch((err) => {
         setOpenErr(true);
         setErrorMessage("注册失败");
@@ -67,6 +75,57 @@ function Login() {
     setOpenInfo(false);
   }
 
+  const handleSubmit = () => {
+    if (
+      validateEmail() &&
+      validatePass(password) &&
+      validateConfPass(confirm)
+    ) {
+      console.log("Validated for register");
+      registerUser();
+    }
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setEmailError(""); // Clear the error when the user types
+  };
+
+  const validateEmail = () => {
+    if (!email) {
+      setEmailError("Email is required");
+      return false;
+    }
+    if (!emailRegex.test(email)) {
+      setEmailError("Please enter a valid email address");
+      return false;
+    }
+    setEmailError("");
+    return true;
+  };
+  const validatePass = (password) => {
+    if (!password.match(passRegex)) {
+      setPassError(
+        "Password must be at least 8 characters long, and include at least one uppercase letter, one lowercase letter, one number, and one special character."
+      );
+      return false;
+    } else {
+      setPassError("");
+      // return tru;
+    }
+    return true;
+  };
+
+  const validateConfPass = (confirm) => {
+    if (confirm !== password) {
+      setConfError("Passwords do not match");
+      return false;
+    } else {
+      setConfError("");
+    }
+    return true;
+  };
+
   return (
     <>
       <Container maxWidth="xs">
@@ -74,12 +133,32 @@ function Login() {
           <Typography variant="h5" align="center" gutterBottom>
             Register
           </Typography>
+          {/* existing */}
+          {/* <TextField
+      label="Username/Email"
+      fullWidth
+      margin="normal"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      slotProps={{
+      input: {
+      startAdornment: (
+      <span role="img" aria-label="user icon">
+      📧
+      </span>
+      ),
+      },
+      }}
+      /> */}
+          {/* ayuj change */}
           <TextField
-            label="邮箱"
+            label="Username/Email"
             fullWidth
             margin="normal"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
+            error={!!emailError} // Set error state to true if there is an error
+            helperText={emailError} // Display the error message below the input field
             slotProps={{
               input: {
                 startAdornment: (
@@ -90,13 +169,19 @@ function Login() {
               },
             }}
           />
+
           <TextField
-            label="密码"
+            label="Password"
             type="password"
             fullWidth
             margin="normal"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              validatePass(e.target.value); // Validate password on change
+            }}
+            error={Boolean(passError)}
+            helperText={passError}
             slotProps={{
               input: {
                 startAdornment: (
@@ -108,12 +193,17 @@ function Login() {
             }}
           />
           <TextField
-            label="确认密码"
+            label="Confirm Password"
             type="password"
             fullWidth
             margin="normal"
             value={confirm}
-            onChange={(e) => setConfirm(e.target.value)}
+            onChange={(e) => {
+              setConfirm(e.target.value);
+              validateConfPass(e.target.value); // Validate confirm password
+            }}
+            error={Boolean(confError)}
+            helperText={confError}
             slotProps={{
               input: {
                 startAdornment: (
@@ -124,9 +214,45 @@ function Login() {
               },
             }}
           />
+
+          {/* <TextField
+        label="Password"
+        type="password"
+        fullWidth
+        margin="normal"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        slotProps={{
+        input: {
+        startAdornment: (
+        <span role="img" aria-label="lock icon">
+        🔒
+        </span>
+        ),
+        },
+        }}
+        />
+        <TextField
+        label="Confirm Password"
+        type="password"
+        fullWidth
+        margin="normal"
+        value={confirm}
+        onChange={(e) => setConfirm(e.target.value)}
+        slotProps={{
+        input: {
+        startAdornment: (
+        <span role="img" aria-label="lock icon">
+        🔒
+        </span>
+        ),
+        },
+        }}
+        /> */}
           <LoadingButton
             loading={isLoading}
-            onClick={registerUser}
+            // onClick={registerUser}
+            onClick={handleSubmit}
             variant="contained"
             color="primary"
             fullWidth

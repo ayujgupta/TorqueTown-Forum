@@ -40,9 +40,10 @@ function User() {
               <UserMenu userinfo={info}></UserMenu>
             </Grid>
             <Grid size={9}>
-              <div>
+            <div style={{margin:"10px"}}>
                 <Typography variant="h5">{info.username}</Typography>
-                <Typography variant="h6">{info.signature}</Typography>
+                <Typography variant="h7" sx={{ fontStyle: 'italic' }}>
+                {info.signature}</Typography>
               </div>
               {currentAction === "profile" ? (
                 <UserProfile userinfo={info}></UserProfile>
