@@ -2,12 +2,13 @@ import Grid from "@mui/material/Grid2";
 import { Avatar, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { getUser, removeToken, removeUser, request } from "../../../utils";
+import { useAxios } from "../../../utils";
 import { useStore } from "../../../store";
 
 import "./index.css";
 
 function AccountMenu() {
+  const axiosInstance = useAxios();
   const { userStore } = useStore();
   const navigator = useNavigate();
   const userInfo = userStore.getUser();
@@ -32,11 +33,12 @@ function AccountMenu() {
 
   // 用户登出
   function logout() {
-    request.post("/auth/logout").then((res) => {
+    axiosInstance.post("/auth/logout").then((res) => {
       console.log("退出成功");
     });
-    removeToken();
-    removeUser();
+    userStore.clearUser();
+    // removeToken();
+    // removeUser();
     navigator("/", { replace: true });
     console.log("登出");
   }

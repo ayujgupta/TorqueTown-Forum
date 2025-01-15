@@ -3,13 +3,14 @@ import { Typography, useMediaQuery, Pagination } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import ArticleCard from "../../../components/ArticleList/ArticleCard";
 import { useState, useEffect } from "react";
-import { request } from "../../../utils";
+import { useAxios } from "../../../utils";
 
 import style from "./index.module.css";
 
 // todo 获取用户收藏的文章
 
 function AccountFavorites() {
+  const axiosInstance = useAxios();
   const isSmallScreen = useMediaQuery("(max-width:800px)");
 
   const [article, setArticle] = useState([]);
@@ -18,7 +19,7 @@ function AccountFavorites() {
   const [totalPage, setTotalPage] = useState(1);
 
   useEffect(() => {
-    request
+    axiosInstance
       .get(`/favorites/list?pageNum=${currentPage}`)
       .then((res) => {
         setArticle((e) => res.data.data.list);

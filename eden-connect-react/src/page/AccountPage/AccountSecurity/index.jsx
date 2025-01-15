@@ -9,12 +9,13 @@ import {
 } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import { request } from "../../../utils";
+import { useAxios } from "../../../utils";
 
 import "./index.css";
 import { useState } from "react";
 
 function AccountSecurity() {
+  const axiosInstance = useAxios();
   function sendConfirmCode() {
     alert("尚未实现");
   }
@@ -49,7 +50,7 @@ function AccountSecurity() {
       setOpenErr(true);
       setErrorMessage("两次密码不一致");
     }
-    request
+    axiosInstance
       .post(`/account/changePwd`, {
         password_old: passwordOld,
         password_new: passwordNew,

@@ -7,19 +7,22 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import { Link, replace } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./index.css";
 import { useState } from "react";
-import { request, setToken, removeToken } from "../../utils";
+import { useAxios } from "../../utils";
 import { useStore } from "../../store";
 import { useNavigate } from "react-router-dom";
+// import { useAuth } from "../../utils/TokenContext";
+import { useAuth } from "../../utils/TokenContext";
 
 function Login() {
+  const axiosInstance = useAxios();
   const { userStore } = useStore();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const { setToken}=useAuth();
   const [openErr, setOpenErr] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -28,7 +31,7 @@ function Login() {
       email: email,
       password: password,
     };
-    request
+    axiosInstance
       .post(`/auth/login`, loginData)
       .then((res) => {
         if (res.data.code === 200) {

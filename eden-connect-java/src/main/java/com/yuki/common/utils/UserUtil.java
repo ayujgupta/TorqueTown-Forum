@@ -7,13 +7,24 @@ public class UserUtil {
 
 
     public static String getCurrentEmail(){
-        LoginUser loginUser = (LoginUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return loginUser.getEmail();
+        try {
+            LoginUser loginUser = (LoginUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return loginUser.getEmail();
+        } catch (Exception e) {
+            System.out.println(e+"--------- "+SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        }
+        return null;
     }
 
     public static Long getUserID(){
-        LoginUser loginUser = (LoginUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return loginUser.getUserId();
+        try {
+            LoginUser loginUser = (LoginUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return loginUser.getUserId();
+        } catch (Exception e) {
+            System.out.println(e+"--------- "+SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        }
+        return null;
+       
     }
 
 }

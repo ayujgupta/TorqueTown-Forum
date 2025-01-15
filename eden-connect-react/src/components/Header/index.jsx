@@ -8,6 +8,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { useStore } from "../../store";
+import { useAuth } from "../../utils/TokenContext";
 import {
   TextField,
   InputAdornment,
@@ -17,17 +18,19 @@ import {
 } from "@mui/material";
 import { Search, Home } from "@mui/icons-material";
 import { replace, useNavigate } from "react-router-dom";
-import { getToken, removeToken, removeUser, setUser } from "../../utils";
-import { request } from "../../utils";
+// import { getToken, removeToken, removeUser, setUser } from "../../utils";
+import { useAxios } from "../../utils";
 // import Container from "@mui/material";
 
 import "./index.css";
 
 function Header() {
+  const axiosInstance = useAxios();
   const logoURL = "http://localhost:7777/upload/img/logo.png";
   const { userStore } = useStore();
   const [userInfo, setUserInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { token} = useAuth();
 
   const debounceTimer = useRef(null); // 定时器引用
   const navigator = useNavigate();
@@ -35,12 +38,24 @@ function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   // 获取用户信息
+  //   setUserInfo(userStore.getUser());
+  //   setIsLoading(false);
+  // });
+
+  useEffect(()=>{
+    console.log("inside header useeffect")
     setIsLoading(true);
-    // 获取用户信息
-    setUserInfo(userStore.getUser());
+    if(token==null){
+      setUserInfo(null);
+    }
+    else{
+      setUserInfo(userStore.getUser());
+    }
     setIsLoading(false);
-  });
+  },[token]);
 
   function goHome() {
     navigator("/");
@@ -99,11 +114,12 @@ function Header() {
 
   // 用户登出
   function logout() {
-    request.post("/auth/logout").then((res) => {
+    axiosInstance.post("/auth/logout").then((res) => {
       console.log("退出成功");
     });
-    removeToken();
-    removeUser();
+    userStore.clearUser();
+    // removeToken();
+    // removeUser();
     navigator("/");
     setAnchorEl(null);
   }
@@ -242,7 +258,7 @@ function Header() {
               Post an Article
             </Button>
 
-            {getToken() ? userDiv : guestDiv}
+            {token? userDiv : guestDiv}
           </Toolbar>
         </Container>
       </AppBar>

@@ -13,6 +13,7 @@ const getToken = () => {
 // 移除本地的token
 const removeToken = () => {
   window.localStorage.removeItem(key);
+  removeUser();
 };
 
 const setUser = (user) => {

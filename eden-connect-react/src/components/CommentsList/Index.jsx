@@ -11,12 +11,13 @@ import {
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useState, useEffect } from "react";
-import { request } from "../../utils";
+import { useAxios } from "../../utils";
 import { useStore } from "../../store";
 
 import "./index.css";
 
 function CommentsList({ articleId }) {
+  const axiosInstance = useAxios();
   const { userStore } = useStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
@@ -42,7 +43,7 @@ function CommentsList({ articleId }) {
   }, [articleId, currentPage, commentUpdate]);
 
   function getArticleComment(articleId, currentPage) {
-    request
+    axiosInstance
       .get(`/Comment/article/${articleId}?pageNum=${currentPage}`)
       .then((res) => {
         if (res.data.code === 200) {
@@ -55,7 +56,7 @@ function CommentsList({ articleId }) {
   }
 
   function sendComment() {
-    request
+    axiosInstance
       .post("/Comment/add", { article_id: articleId, content: comment.trim() })
       .then((res) => {
         if (res.data.code === 200) {

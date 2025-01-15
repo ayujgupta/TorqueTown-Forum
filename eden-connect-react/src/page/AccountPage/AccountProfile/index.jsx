@@ -15,11 +15,12 @@ import { LoadingButton } from "@mui/lab";
 import { useState, useEffect } from "react";
 import { useStore } from "../../../store";
 import { useNavigate } from "react-router-dom";
-import { request, setUser } from "../../../utils";
+import { useAxios } from "../../../utils";
 
 import "./index.css";
 
 function AccountProfile() {
+  const axiosInstance = useAxios();
   const { userStore } = useStore();
   const [errorMessage, setErrorMessage] = useState("");
   const [open, setOpen] = useState(false); // 测试的时候用true
@@ -41,7 +42,7 @@ function AccountProfile() {
    * 获取用户信息
    */
   function getUserInfo() {
-    request
+    axiosInstance
       .get("/account")
       .then((res) => {
         if (res.data.code === 200) {
@@ -83,7 +84,7 @@ function AccountProfile() {
     const formData = new FormData();
     formData.append("file", e.target.files[0]);
 
-    request
+    axiosInstance
       .post(`/account/upload/avatar`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -126,7 +127,7 @@ function AccountProfile() {
     }
     userInfo.avatar = isDefaultAvatar ? "" : newAvatar;
 
-    request
+    axiosInstance
       .post(`/account/updateInfo`, userInfo)
       .then((res) => {
         if (res.data.code === 200) {

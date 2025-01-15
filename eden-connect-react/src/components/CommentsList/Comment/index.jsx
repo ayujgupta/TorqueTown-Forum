@@ -23,10 +23,11 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import { useStore } from "../../../store";
-import { request } from "../../../utils";
+import { useAxios } from "../../../utils";
 import { useParams } from "react-router-dom";
 
 function Comment({ comment, currentPage, getComment, articleId }) {
+  const axiosInstance = useAxios();
   // console.log(comment);
   const { userStore } = useStore();
   const { article_id } = useParams("id");
@@ -55,7 +56,7 @@ function Comment({ comment, currentPage, getComment, articleId }) {
    */
   function delComment() {
     setIsLoading(true);
-    request
+    axiosInstance
       .delete(`/Comment/del/${commentInfo.id}`)
       .then((res) => {
         if (res.data.code === 200) {
@@ -100,7 +101,7 @@ function Comment({ comment, currentPage, getComment, articleId }) {
   function likeComment() {
     setIsLikeLoading(true);
     console.log("like");
-    request
+    axiosInstance
       .post(`/Comment/like/${commentInfo.id}`)
       .then((res) => {
         if (res.data.code === 200) {
@@ -127,7 +128,7 @@ function Comment({ comment, currentPage, getComment, articleId }) {
    */
   function replyComment() {
     setIsReplyLoading(true);
-    request
+    axiosInstance
       .post(`/Comment/reply`, {
         article_id: articleId,
         content: replyText,

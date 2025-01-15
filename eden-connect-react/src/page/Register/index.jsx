@@ -9,12 +9,13 @@ import {
 import { Link } from "react-router-dom";
 import "./index.css";
 import { useState } from "react";
-import { request } from "../../utils";
+import { useAxios } from "../../utils";
 import { LoadingButton } from "@mui/lab";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const navigate = useNavigate();
+  const axiosInstance = useAxios();
+  // const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
@@ -33,7 +34,7 @@ function Login() {
 
   function registerUser() {
     setIsLoading(true);
-    request
+    axiosInstance
       .post(`/auth/register`, {
         email: email,
         password: password,

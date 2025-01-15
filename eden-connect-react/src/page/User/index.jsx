@@ -5,11 +5,12 @@ import { useParams } from "react-router-dom";
 import UserProfile from "./UserProfile";
 import UserPosted from "./UserPosted";
 import { useEffect, useState } from "react";
-import { request } from "../../utils";
+import { useAxios } from "../../utils";
 
 import "./index.css";
 
 function User() {
+  const axiosInstance = useAxios();
   const { id, action } = useParams();
   const currentAction = action || "profile";
   if (id === undefined || id === null) {
@@ -20,7 +21,7 @@ function User() {
 
   // 通过用户id获取当前基本信息
   useEffect(() => {
-    request.get(`/account/public/${id}`).then((res) => {
+    axiosInstance.get(`/account/public/${id}`).then((res) => {
       // console.log(res.data);
 
       if (res.data.code === 200) {

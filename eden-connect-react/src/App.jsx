@@ -12,7 +12,7 @@ import SignInUp from "./page/SignInUp";
 import Login from "./page/Login";
 import Register from "./page/Register";
 import ArticleEditor from "./page/ArticleEditor";
-import { getToken } from "./utils";
+// import { getToken } from "./utils";
 
 function App() {
   const { themeStore } = useStore();

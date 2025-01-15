@@ -17,18 +17,18 @@ import { useParams, useNavigate } from "react-router-dom";
 import ImageResize from 'quill-image-resize-module-react';
 
 Quill.register('modules/imageResize', ImageResize);
-
-import { getToken, request } from "../../utils";
+import {  useAxios } from "../../utils";
 import "./index.css";
+import { useAuth } from "../../utils/TokenContext";
 
 
 function ArticleEditor() {
+  const axiosInstance = useAxios();
   const modules = {
     toolbar: [
       [{ header: '1' }, { header: '2' }, { font: [] }],
       [{ list: 'ordered' }, { list: 'bullet' }],
       ['bold', 'italic', 'underline'],
-      // ['link', 'image'],
       ['blockquote', 'code-block'],
       [{ align: [] }],
     ],
@@ -51,9 +51,10 @@ function ArticleEditor() {
   const [errorMessage, setErrorMessage] = useState("");
   const [infoMessage, setInfoMessage] = useState("");
   const editorRef = useRef(null); 
+  const {token }=useAuth();
   
   useEffect(() => {
-    const token = getToken();
+    
     if (!token) {
       setLoadingAnime(true);
       setErrorMessage("User not logged in. Redirecting to homepage...");
@@ -66,9 +67,10 @@ function ArticleEditor() {
   useEffect(() => {
     if (id) {
       setLoadingAnime(true);
-      request
-      .get(`/article/${id}`)
+      axiosInstance
+      .get(`/article/edit/${id}`)
       .then((res) => {
+        
         if (res.data.code === 200) {
           setTitle(res.data.data.title);
           setContent(JSON.parse(res.data.data.content));
@@ -80,49 +82,49 @@ function ArticleEditor() {
         }
         setLoadingAnime(false);
       })
-      .catch(() => {
-        setErrorMessage("Failed to fetch article details.");
+      .catch((err) => {
+        console.log(err);
         setOpenErr(true);
+        if (err instanceof Error) {
+          setErrorMessage(err.message)
+          setTimeout(() => navigate("/"), 2000);
+          
+        } else {
+          setErrorMessage("An unexpected error occurred.");
+        }
         setLoadingAnime(false);
       });
     }
   }, [id]);
-
-  // const getModifiedContentBody-()
+  
   
   const handleContentChange = (value) => {
     setContent(value);
-    // const deltaContent = editorRef.current.getEditor().getContents();
-    // console.log("Delta Content: ", JSON.stringify(delta, null, 2));
   };
   
   const handleImageUpload = async (e) => {
     try {
-      console.log("inside image upload");
       const imgUrl= await uploadImageToBackend(e);
-      
-      if(imgUrl!==""){
+      if(imgUrl){
         setContent((c) => `${c}<img src="${imgUrl}" alt="Uploaded Image" />\n`);
-        
       }
-    } catch (err) {
+    } catch (exc) {
+      console.log(exc);
       setErrorMessage("Image upload failed. Ensure size is below 5MB.");
       setOpenErr(true);
     } 
   };
   const handleThumbnailUpload = async (e) => {
     try {
-      // console.log("inside thumbnail upload");
       const imgUrl= await uploadImageToBackend(e);
-      if(imgUrl!==""){
+      if(imgUrl){
         setOpenInfo(true);
-        // console.log(imgUrl);
+
         setThumbnail(imgUrl);
         setInfoMessage("Thumbnail Added - "+e.target.files[0].name);
-        // console.log(openInfo+" "+infoMessage);
-        // alert("Thumbnail Added");
       }
     } catch (err) {
+      console.log(err);
       setErrorMessage("Thumbnail upload failed. Ensure size is below 5MB.");
       setOpenErr(true);
     } 
@@ -132,12 +134,11 @@ function ArticleEditor() {
     try {
       const file = e.target.files[0];
       if (!file) return;
-      
       setIsUploading(true);
       const formData = new FormData();
       formData.append("file", file);
-
-      const res = await request.post("/article/upload/img", formData, {
+      
+      const res = await axiosInstance.post("/article/upload/img", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       if (res.data.code === 200) {
@@ -150,171 +151,185 @@ function ArticleEditor() {
       return imgUrl;
     } catch (err) {
       console.log(err);
-      // setErrorMessage("Image upload failed. Ensure size is below 5MB.");
-      // setOpenErr(true);
+      setOpenErr(true);
+      if (err instanceof Error) {
+        setErrorMessage(err.message); 
+      } else {
+        setErrorMessage("An unexpected error occurred.");
+      }
+      return null;
     } finally {
       setIsUploading(false);
     }
     
   };
-
-
-const handleSubmit = async () => {
-  setIsSubmitLoading(true);
-  console.log(isSubmitLoading);
-  try {
-    // Make sure the editor is ready before calling getEditor()
-    // if (editorRef.current) {
-    // Get the Delta format from the ReactQuill editor
-    const deltaContent = editorRef.current.getEditor().getContents();
-    // console.log("DeltaContent: ", deltaContent);
-    // console.log("Delta Content: ", JSON.stringify(deltaContent, null, 2));
-    // }
-    // throw "Too big"; 
-    const res = await request.post("/article/save", {
-      id,
-      title,
-      content: JSON.stringify(deltaContent, null, 2),
-      summary,
-      thumbnail,
-    });
-    
-    if (res.data.code === 200) {
-      setOpenInfo(true);
-      setInfoMessage(res.data.msg);
-      setTitle("");
-      setSummary("");
-      setContent("");
-      setTimeout(() => navigate("/"), 1000);
-    } else {
+  
+  
+  const handleSubmit = async () => {
+    setIsSubmitLoading(true);
+    console.log(isSubmitLoading);
+    try {
+      const deltaContent = editorRef.current.getEditor().getContents();
+      
+      const res = await axiosInstance.post("/article/save", {
+        id,
+        title,
+        content: JSON.stringify(deltaContent, null, 2),
+        summary,
+        thumbnail,
+      });
+      // console.log(res);
+      if (res.data.code === 200) {
+        // const tokenError = res.headers['token-error'];
+        if(token){
+          setOpenInfo(true);
+          setInfoMessage(res.data.msg);
+          setTitle("");
+          setSummary("");
+          setContent("");
+          setTimeout(() => navigate("/"), 3000);
+        }
+        else{
+          // console.log(tokenError);
+          setOpenErr(true);
+          setErrorMessage(res.headers['token-error']);
+        }
+      } else {
+        console.log(res.data.msg);
+        setOpenErr(true);
+        setErrorMessage(res.data.msg);
+      }
+    } catch (err) {
+      console.log("Inside catch block"+err);
       setOpenErr(true);
-      setErrorMessage(res.data.msg);
+      if (err instanceof Error) {
+        setErrorMessage(err.message);
+        setTimeout(() => navigate("/"), 3000);
+      } else {
+        setErrorMessage("An unexpected error occurred.");
+      }
+    } finally {
+      setIsSubmitLoading(false);
     }
-  } catch (err) {
-    setOpenErr(true);
-    setErrorMessage("Failed to save the article."+err);
-  } finally {
-    setIsSubmitLoading(false);
-  }
-};
-
-return (
-  <Container maxWidth="md">
-  <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
-  <Typography variant="h5" gutterBottom>
-  Create or Edit Article
-  </Typography>
+  };
   
-  <TextField
-  label="Title"
-  variant="outlined"
-  fullWidth
-  margin="normal"
-  value={title}
-  onChange={(e) => setTitle(e.target.value)}
-  />
-  
-  <TextField
-  label="Summary"
-  variant="outlined"
-  fullWidth
-  margin="normal"
-  value={summary}
-  onChange={(e) => setSummary(e.target.value)}
-  />
-  
-  <Typography variant="h6" style={{ marginTop: "20px" }}>
-  Content
-  </Typography>
-  <ReactQuill
-  ref={editorRef} 
-  theme="snow"
-  value={content}
-  onChange={handleContentChange}
-  modules={modules}
-  style={{ height: "400px", marginBottom: "20px" }}
-  />
-  <label htmlFor="content-upload-button">
-  <input
+  return (
+    <Container maxWidth="md">
+    <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
+    <Typography variant="h5" gutterBottom>
+    Create or Edit Article
+    </Typography>
+    
+    <TextField
+    label="Title"
+    variant="outlined"
+    fullWidth
+    margin="normal"
+    value={title}
+    onChange={(e) => setTitle(e.target.value)}
+    />
+    
+    <TextField
+    label="Summary"
+    variant="outlined"
+    fullWidth
+    margin="normal"
+    value={summary}
+    onChange={(e) => setSummary(e.target.value)}
+    />
+    
+    <Typography variant="h6" style={{ marginTop: "20px" }}>
+    Content
+    </Typography>
+    <ReactQuill
+    ref={editorRef} 
+    theme="snow"
+    value={content}
+    onChange={handleContentChange}
+    modules={modules}
+    style={{ height: "400px", marginBottom: "20px" }}
+    />
+    <label htmlFor="content-upload-button">
+    <input
     id="content-upload-button"
     type="file"
     style={{ display: "none" }}
     onChange={handleImageUpload}
-  />
-  <LoadingButton
+    />
+    <LoadingButton
     variant="contained"
     color="primary"
     component="span"
     startIcon={<CloudUpload />}
     loading={isUploading}
-  >
+    >
     Upload Content Image
-  </LoadingButton>
-</label>
-
-{/* Thumbnail Upload */}
-<label htmlFor="thumbnail-upload-button">
-  <input
+    </LoadingButton>
+    </label>
+    
+    {/* Thumbnail Upload */}
+    <label htmlFor="thumbnail-upload-button">
+    <input
     id="thumbnail-upload-button"
     type="file"
     style={{ display: "none" }}
     onChange={handleThumbnailUpload}
-  />
-  <LoadingButton
+    />
+    <LoadingButton
     variant="contained"
     color="primary"
     component="span"
     startIcon={<CloudUpload />}
     loading={isUploading}
-  >
+    >
     Upload Thumbnail
-  </LoadingButton>
-</label>
+    </LoadingButton>
+    </label>
+    
+    <LoadingButton
+    loading={isSubmitLoading}
+    loadingPosition="center"
+    onClick={handleSubmit}
+    variant="contained"
+    color="primary"
+    fullWidth
+    style={{ marginTop: "20px" }}
+    >
+    Submit Article
+    </LoadingButton>
+    </Paper>
+    
+    <Snackbar
+    open={openErr}
+    autoHideDuration={3000}
+    onClose={() => setOpenErr(false)}
+    anchorOrigin={{ vertical: "top", horizontal: "center" }}
+    >
+    <Alert severity="error" onClose={() => setOpenErr(false)}>
+    {errorMessage}
+    </Alert>
+    </Snackbar>
+    
+    <Snackbar
+    open={openInfo}
+    autoHideDuration={3000}
+    onClose={() => setOpenInfo(false)}
+    anchorOrigin={{ vertical: "top", horizontal: "center" }}
+    >
+    <Alert severity="success" onClose={() => setOpenInfo(false)}>
+    {infoMessage}
+    </Alert>
+    </Snackbar>
+    
+    <Backdrop
+    open={loadingAnime}
+    style={{ color: "#fff", zIndex: 9999 }}
+    >
+    <CircularProgress color="inherit" />
+    </Backdrop>
+    </Container>
+  );
   
-  <LoadingButton
-  loading={isSubmitLoading}
-  loadingPosition="center"
-  onClick={handleSubmit}
-  variant="contained"
-  color="primary"
-  fullWidth
-  style={{ marginTop: "20px" }}
-  >
-  Submit Article
-  </LoadingButton>
-  </Paper>
-  
-  <Snackbar
-  open={openErr}
-  autoHideDuration={3000}
-  onClose={() => setOpenErr(false)}
-  anchorOrigin={{ vertical: "top", horizontal: "center" }}
-  >
-  <Alert severity="error" onClose={() => setOpenErr(false)}>
-  {errorMessage}
-  </Alert>
-  </Snackbar>
-  
-  <Snackbar
-  open={openInfo}
-  autoHideDuration={3000}
-  onClose={() => setOpenInfo(false)}
-  anchorOrigin={{ vertical: "top", horizontal: "center" }}
-  >
-  <Alert severity="success" onClose={() => setOpenInfo(false)}>
-  {infoMessage}
-  </Alert>
-  </Snackbar>
-  
-  <Backdrop
-  open={loadingAnime}
-  style={{ color: "#fff", zIndex: 9999 }}
-  >
-  <CircularProgress color="inherit" />
-  </Backdrop>
-  </Container>
-);
-
 }
 
 export default ArticleEditor;

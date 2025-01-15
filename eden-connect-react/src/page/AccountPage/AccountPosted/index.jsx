@@ -4,10 +4,11 @@ import ArticleCard from "../../../components/ArticleList/ArticleCard";
 
 import style from "./index.module.css";
 import { useEffect, useState } from "react";
-import { request } from "../../../utils";
+import { useAxios } from "../../../utils";
 import { useStore } from "../../../store";
 
 function AccountPosted() {
+  const axiosInstance = useAxios();
   const isSmallScreen = useMediaQuery("(max-width:800px)");
   const { userStore } = useStore();
   const userInfo = userStore.getUser();
@@ -18,7 +19,7 @@ function AccountPosted() {
   const [totalPage, setTotalPage] = useState(1);
 
   useEffect(() => {
-    request
+    axiosInstance
       .get(`/article/byUserId?pageNum=${currentPage}&userId=${userInfo.id}`)
       .then((res) => {
         setArticle(res.data.data.list);

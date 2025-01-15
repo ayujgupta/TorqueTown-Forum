@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { getUser, removeToken, setUser } from "../utils";
+import { getUser, setUser } from "../utils";
 
 class userStore {
   userInfo = null;
@@ -18,7 +18,6 @@ class userStore {
   }
 
   getUser() {
-    // console.log("获取用户信息");
     return this.userInfo;
   }
 
@@ -31,7 +30,7 @@ class userStore {
   clearUser() {
     this.userInfo = null;
     this.isLogin = false;
-    removeToken();
+    // removeToken();
   }
 }
 

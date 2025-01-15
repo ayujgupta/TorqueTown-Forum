@@ -5,18 +5,19 @@ import {
   ThumbUpAlt,
   LocalFireDepartment,
 } from "@mui/icons-material";
-import { request } from "../../../utils";
+import { useAxios } from "../../../utils";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function PinTop() {
+  const axiosInstance = useAxios();
   // todo 找不到article
   const [article, setArticle] = useState(null);
   const navigate = useNavigate();
 
   // Get pinned articles
   useEffect(() => {
-    request.get("/article/top").then((res) => {
+    axiosInstance.get("/article/top").then((res) => {
       if (res.data.code === 200) {
         setArticle(res.data.data);
       } else {

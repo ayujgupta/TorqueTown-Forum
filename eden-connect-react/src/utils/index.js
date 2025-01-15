@@ -1,4 +1,4 @@
-import { request } from "./request";
+import { useAxios } from "./request";
 import { setCurrentTheme, getCurrentTheme } from "./local";
 import {
   getToken,
@@ -12,7 +12,7 @@ import {
 export {
   setCurrentTheme,
   getCurrentTheme,
-  request,
+  useAxios,
   getToken,
   setToken,
   removeToken,

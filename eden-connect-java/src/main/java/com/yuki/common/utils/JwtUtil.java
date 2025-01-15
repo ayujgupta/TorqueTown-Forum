@@ -18,7 +18,7 @@ public class JwtUtil {
     
     //有效期为
     // public static final Long JWT_TTL = 60 * 60 * 1000L * 24;// 24 hours
-    public static final Long JWT_TTL =60 * 60 * 1000L;
+    public static final Long JWT_TTL = 30 * 1000L;
     //设置秘钥明文
     public static final String JWT_KEY = "yuki";
     

@@ -1,18 +1,19 @@
 import { Icon, Typography } from "@mui/material";
 import { AccountCircle } from "@mui/icons-material";
 import { IconButton, Avatar, Divider } from "@mui/material";
-import { request } from "../../../utils";
+import { useAxios } from "../../../utils";
 import { useNavigate } from "react-router-dom";
 
 import "./index.css";
 import { useEffect, useState } from "react";
 
 function AdminASide() {
+  const axiosInstance=useAxios();
   const [info, setInfo] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    request.get("/article/getAdminInfo").then((res) => {
+    axiosInstance.get("/article/getAdminInfo").then((res) => {
       // console.log("获取管理员信息:");
       // console.log(res.data);
       if (res.data.code === 200) {

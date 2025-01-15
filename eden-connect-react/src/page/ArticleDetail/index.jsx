@@ -26,10 +26,12 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CommentsList from "../../components/CommentsList/Index";
 import { useState, useEffect } from "react";
-import { request } from "../../utils";
+import {  useAxios } from "../../utils";
 import { marked } from "marked";
 import "./index.css";
 import { useStore } from "../../store";
+// import { useAuth } from "../../utils/TokenContext";
+import { useAuth } from "../../utils/TokenContext";
 // import {  } from "react-router-dom";
 // import { DeltaToHtmlConverter } from "quill-delta-to-html";
 // import ReactQuill, { Quill } from "react-quill";
@@ -37,6 +39,7 @@ import Quill from "quill"; // Import Quill directly
 
 
 function ArticleDetail() {
+  const axiosInstance = useAxios();
   const { userStore } = useStore();
   
   const navigate = useNavigate();
@@ -50,8 +53,9 @@ function ArticleDetail() {
   const [errorMessage, setErrorMessage] = useState("");
   const [openInfo, setOpenInfo] = useState(false);
   const [infoMessage, setInfoMessage] = useState("");
-  
-  const [userInfo, setUserInfo] = useState(userStore.getUser());
+  const { token } = useAuth();
+
+  const [userInfo, setUserInfo] = useState(token?userStore.getUser():null);
   // const { DeltaToHtmlConverter } = require('quill-delta-to-html');
   const [openDialog, setOpenDialog] = useState(false); // State for dialog
   function goEditor() {
@@ -60,13 +64,18 @@ function ArticleDetail() {
   
   useEffect(() => {
     setIsLoading(true);
-    request.put(`/article/view/${id}`);
-    request.get(`/article/${id}`).then((res) => {
+    // console.log("user "+userStore.getUser());
+    // if(!getToken()){
+    //   useStore.clearUser;
+    // }
+    axiosInstance.put(`/article/viewcount/${id}`);
+    axiosInstance.get(`/article/view/${id}`).then((res) => {
       const data = res.data.data;
       setArticleInfo(data);
       console.log(userInfo?.id === data?.create_by);
       
       try {
+        
         let deltaContent = data.content; // Delta JSON content from backend
         
         // Ensure deltaContent is parsed correctly
@@ -78,7 +87,7 @@ function ArticleDetail() {
         
         const tempCont = document.createElement('div');
         // if (!window.tempQuill) {
-          
+        
         //   window.tempQuill = new Quill(tempCont);
         // }
         
@@ -107,12 +116,27 @@ function ArticleDetail() {
         setHtmlContent("<p>Failed to load content.</p>");
       }
       setIsLoading(false);
+    }).catch((err)=>{
+      console.log(err);
+      setOpenErr(true);
+      if (err instanceof Error) {
+        setErrorMessage(err.message); // Display the message from the thrown error
+        navigate('/');
+      } else {
+        setErrorMessage("An unexpected error occurred.");
+      }
     });
   }, [id]);
   
-  // useEffect(() => {
-    //   request.put(`/article/view/${id}`);
-  // }, [id]);
+  
+  useEffect(() => {
+    // let token=getToken();
+    console.log("token change+ "+token);
+    if(!token){
+      userStore.clearUser();
+      setUserInfo(null);
+    }
+  }, [token]);
   
   /**
   * 关闭文章
@@ -125,10 +149,11 @@ function ArticleDetail() {
   * 喜欢文章
   */
   function likeArticle() {
-    request
+    axiosInstance
     .post(`/article/like/${id}`)
     .then((res) => {
       if (res.data.code === 200) {
+
         setArticleInfo((e) => ({
           ...articleInfo,
           isLike: !articleInfo.isLike,
@@ -146,8 +171,8 @@ function ArticleDetail() {
   }
   
   function deleteArticle() {
-    request
-    .delete(`/article/${id}`)
+    axiosInstance
+    .delete(`/article/delete/${id}`)
     .then((res) => {
       if (res.data.code === 200) {
         setOpenInfo(true); 
@@ -170,7 +195,7 @@ function ArticleDetail() {
   * 添加收藏
   */
   function addFavorite() {
-    request
+    axiosInstance
     .post(`/favorites/add/${id}`)
     .then((res) => {
       if (res.data.code === 200) {
@@ -193,7 +218,7 @@ function ArticleDetail() {
   * 移除收藏
   */
   function removeFavorite() {
-    request
+    axiosInstance
     .post(`/favorites/remove/${id}`)
     .then((res) => {
       if (res.data.code === 200) {
@@ -339,27 +364,27 @@ function ArticleDetail() {
       </>
     ) : null}
     
-
+    
     {/* Delete button */}
     {userInfo?.id === articleInfo?.create_by && (
-  <>
-    <div className="option-button">
+      <>
+      <div className="option-button">
       <div>
-        <IconButton onClick={() => setOpenDialog(true)} size="large">
-          <DeleteIcon fontSize="large" />
-        </IconButton>
+      <IconButton onClick={() => setOpenDialog(true)} size="large">
+      <DeleteIcon fontSize="large" />
+      </IconButton>
       </div>
       <div style={{ textAlign: "center", fontSize: "14px", color: "#ddd" }}>
-        Delete
+      Delete
       </div>
-    </div>
-  </>
-)}
-
+      </div>
+      </>
+    )}
+    
     {/* Confirmation Dialog */}
     
-
-
+    
+    
     {userInfo?.id === articleInfo?.create_by ? (
       <>
       <Dialog
