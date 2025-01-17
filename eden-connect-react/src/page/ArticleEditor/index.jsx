@@ -17,9 +17,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import ImageResize from 'quill-image-resize-module-react';
 
 Quill.register('modules/imageResize', ImageResize);
-import {  useAxios } from "../../utils";
+import {  setCurrentTheme, useAxios } from "../../utils";
 import "./index.css";
 import { useAuth } from "../../utils/TokenContext";
+import Modal from "react-modal";
 
 
 function ArticleEditor() {
@@ -50,6 +51,8 @@ function ArticleEditor() {
   const [openInfo, setOpenInfo] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [infoMessage, setInfoMessage] = useState("");
+  const [thumbnailFile,setThumbnailFile]=useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const editorRef = useRef(null); 
   const {token }=useAuth();
   
@@ -119,8 +122,9 @@ function ArticleEditor() {
       const imgUrl= await uploadImageToBackend(e);
       if(imgUrl){
         setOpenInfo(true);
-
+        
         setThumbnail(imgUrl);
+        setThumbnailFile(e.target.files[0].name);
         setInfoMessage("Thumbnail Added - "+e.target.files[0].name);
       }
     } catch (err) {
@@ -167,7 +171,7 @@ function ArticleEditor() {
   
   const handleSubmit = async () => {
     setIsSubmitLoading(true);
-    console.log(isSubmitLoading);
+    // console.log(isSubmitLoading);
     try {
       const deltaContent = editorRef.current.getEditor().getContents();
       
@@ -249,6 +253,7 @@ function ArticleEditor() {
     modules={modules}
     style={{ height: "400px", marginBottom: "20px" }}
     />
+    <div style={{ marginBottom: "20px" }}>
     <label htmlFor="content-upload-button">
     <input
     id="content-upload-button"
@@ -263,10 +268,11 @@ function ArticleEditor() {
     startIcon={<CloudUpload />}
     loading={isUploading}
     >
-    Upload Content Image
+    Upload Image
     </LoadingButton>
     </label>
-    
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
     {/* Thumbnail Upload */}
     <label htmlFor="thumbnail-upload-button">
     <input
@@ -285,7 +291,76 @@ function ArticleEditor() {
     Upload Thumbnail
     </LoadingButton>
     </label>
+    {thumbnail && (<><span style={{ marginRight: "5px", fontSize: "18px"}}>&#128206;</span><a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            setIsModalOpen(true); // Open the modal
+          }}
+          style={{
+            color: "#bf0000",
+            textDecoration: "underline",
+            cursor: "pointer",
+            // marginTop: "10px",
+            display: "inline-block",
+          }}
+        >{thumbnailFile}</a>
+    </>)}
+   <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel="Image Preview"
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 1000, // Overlay on top of all components
+          },
+          content: {
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+            width: "50%", // Medium box size
+            height: "auto",
+            padding: "10px",
+            background: "#36323285",
+            borderRadius: "10px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          },
+        }}
+      >
+        {thumbnail && (
+          <img
+            src={thumbnail}
+            alt="Thumbnail"
+            style={{
+              maxWidth: "100%",
+              maxHeight: "400px",
+              borderRadius: "5px",
+            }}
+          />
+        )}
+        <button
+          onClick={() => setIsModalOpen(false)}
+          style={{
+            marginTop: "10px",
+            padding: "10px 20px",
+            backgroundColor: "#007BFF",
+            color: "#fff",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          Close
+        </button>
+      </Modal>
     
+    </div>
     <LoadingButton
     loading={isSubmitLoading}
     loadingPosition="center"

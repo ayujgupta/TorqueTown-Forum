@@ -3,3 +3,5 @@ logs/
 target/
 .vscode/
 .idea/
+src/main/resources/upload/
+.DS_Store
