@@ -39,7 +39,10 @@ function Login() {
           setToken(res.data.data.token);
           // 登录成功后获取用户信息存到mobx里面
           userStore.setUser(res.data.data.userInfo);
-          setTimeout( navigate("/", { replace: true }),2000);
+          const returnPath = sessionStorage.getItem("returnPath") || "/";
+          console.log(returnPath);
+          sessionStorage.removeItem("returnPath"); // Clear it to avoid reuse
+          setTimeout( navigate(returnPath, { replace: true }),1000);
         } else {
           // 登录失败
           setErrorMessage(res.data.msg);
@@ -47,7 +50,7 @@ function Login() {
         }
       })
       .catch((err) => {
-        setErrorMessage("Login Error: ");
+        setErrorMessage("Login Error: "+err);
         setOpenErr(true);
       });
   }

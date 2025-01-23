@@ -1,8 +1,12 @@
 import axios from "axios";
 import { useAuth } from "./TokenContext";
+import { useStore } from "../store";
+
+
 
 // import { useNavigate } from 'react-router-dom';
 export const useAxios = () => {
+  const { userStore } = useStore();
   const { token ,setToken } = useAuth();
   
   const request = axios.create({

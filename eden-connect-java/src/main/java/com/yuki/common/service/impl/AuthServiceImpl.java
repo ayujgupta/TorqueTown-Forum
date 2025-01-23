@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,27 +23,28 @@ import com.yuki.common.repository.UserRepository;
 import com.yuki.common.service.AuthService;
 import com.yuki.common.utils.JwtUtil;
 import com.yuki.common.utils.RedisCache;
+import com.yuki.common.utils.UserUtil;
 
 @Service
 public class AuthServiceImpl implements AuthService {
-
+    
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
     UserRepository userRepository;
-
+    
     @Autowired
     private RedisCache redisCache;
-
+    
     @SuppressWarnings("rawtypes")
     @Override
     public ResponseResult login(User user) {
-
+        
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword());
-
+        new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword());
+        
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-
+        
         if(ObjectUtils.isEmpty(authenticate)){
             throw new RuntimeException("Wrong username or password");
         }
@@ -54,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
         String jwt = JwtUtil.createJWT(userId);
         // authenticate 存入 redis
         redisCache.setCacheObject("loginUser:"+userId,loginUser);
-
+        
         // 修改用户的最后一次登录时间
         userRepository.setLastLogin(loginUser.getUser().getId(),LocalDateTime.now());
         User userById = userRepository.getUserById(loginUser.getUser().getId());
@@ -63,26 +63,33 @@ public class AuthServiceImpl implements AuthService {
         userDto.setEmail("");
         userDto.setBirthday(null);
         userDto.setSex("");
-
-
+        
+        
         // 把token响应给前端
         HashMap<String,Object> map = new HashMap<>();
         map.put("token",jwt);
         map.put("userInfo",userDto);
         return ResponseResult.okResult(200,"login success",map);
-
+        
     }
-
+    
     @SuppressWarnings("rawtypes")
     @Override
     public ResponseResult logout() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        Long userid = loginUser.getUser().getId();
-        redisCache.deleteObject("loginUser:"+userid);
-        return new ResponseResult(200,"退出成功");
+        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        // Long userid = loginUser.getUser().getId();
+        Long userid=UserUtil.getUserID();
+        if(userid!=null){
+            redisCache.deleteObject("loginUser:"+userid);
+            return  ResponseResult.okResult(200,"User Logged Out Successfully.");
+        }
+        else{
+            return  ResponseResult.errorResult(402,"Unable to find the user");
+        }
+        
     }
-
+    
     @Override
     @SuppressWarnings("rawtypes")
     public ResponseResult register(UserRegisterDto user) {
@@ -114,7 +121,7 @@ public class AuthServiceImpl implements AuthService {
             return ResponseResult.errorResult(500,"Registration failed");
         }
     }
-
+    
     @SuppressWarnings("rawtypes")
     private ResponseResult verifyUserRegisterDto(UserRegisterDto user){
         //ayuj-- regex to handled in react as well
@@ -127,7 +134,7 @@ public class AuthServiceImpl implements AuthService {
         if(!user.getPassword().matches(passwordRegex)){
             return ResponseResult.errorResult(500,"The password can only contain numbers, underscores, letters, and the length is greater than or equal to 6 characters");
         }
-
+        
         // System.out.println(user.getPassword());
         // System.out.println(user.getConfirm());
         if(!Objects.equals(user.getPassword(), user.getConfirm())){
@@ -136,6 +143,6 @@ public class AuthServiceImpl implements AuthService {
         }
         return null;
     }
-
-
+    
+    
 }

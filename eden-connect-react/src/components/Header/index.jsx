@@ -15,9 +15,11 @@ import {
   Container,
   Menu,
   MenuItem,
+  Snackbar,
+  Alert
 } from "@mui/material";
 import { Search, Home } from "@mui/icons-material";
-import { replace, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import { getToken, removeToken, removeUser, setUser } from "../../utils";
 import { useAxios } from "../../utils";
 // import Container from "@mui/material";
@@ -30,21 +32,25 @@ function Header() {
   const { userStore } = useStore();
   const [userInfo, setUserInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { token} = useAuth();
-
+  const { token ,setToken } = useAuth();
+  const [openErr, setOpenErr] = useState(false);
+  const [openInfo, setOpenInfo] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [infoMessage, setInfoMessage] = useState("");
+  
   const debounceTimer = useRef(null); // 定时器引用
   const navigator = useNavigate();
-
+  
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-
+  
   // useEffect(() => {
-  //   setIsLoading(true);
+    //   setIsLoading(true);
   //   // 获取用户信息
   //   setUserInfo(userStore.getUser());
   //   setIsLoading(false);
   // });
-
+  
   useEffect(()=>{
     console.log("inside header useeffect")
     setIsLoading(true);
@@ -56,44 +62,48 @@ function Header() {
     }
     setIsLoading(false);
   },[token]);
-
+  
   function goHome() {
     navigator("/");
   }
-
+  
   function goProfile() {
     navigator("/account/profile");
     setAnchorEl(null);
   }
-
+  
   function goFavorites() {
     navigator("/account/favorites");
     setAnchorEl(null);
   }
-
+  
   function goPosted() {
     navigator("/account/posted");
     setAnchorEl(null);
   }
-
+  
   function goSecurity() {
     navigator("/account/security");
     setAnchorEl(null);
   }
-
+  
   function goLogin() {
-    navigator("/login", replace);
+    const currentPath = window.location.pathname + window.location.search; 
+    sessionStorage.setItem("returnPath", currentPath);
+    console.log("currentPath "+currentPath);
+    navigator("/login", { replace: true }); 
+    // navigator("/login", replace);
     setAnchorEl(null);
   }
-
+  
   function goEditor() {
     navigator("/edit");
   }
-
+  
   /**
-   * 搜索文章
-   * @param {} e
-   */
+  * 搜索文章
+  * @param {} e
+  */
   const inputChange = (e) => {
     const value = e.target.value.trim();
     if (value === "") {
@@ -102,7 +112,7 @@ function Header() {
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
     }
-
+    
     debounceTimer.current = setTimeout(() => {
       if (value !== "" && value === e.target.value.trim()) {
         navigator(`/search?key=${e.target.value.trim()}`);
@@ -111,159 +121,191 @@ function Header() {
       }
     }, 1000);
   };
-
+  
   // 用户登出
   function logout() {
     axiosInstance.post("/auth/logout").then((res) => {
-      console.log("退出成功");
+      if (res.data.code === 200) {
+        userStore.clearUser();
+        setToken(null);
+        setOpenInfo(true);
+        setAnchorEl(null);
+        setInfoMessage("Logged Out Successfully");
+        
+        // console.log("Logged out");
+      }
+      else{
+        setOpenErr(true);
+        setErrorMessage(res.data.message);
+      }
     });
-    userStore.clearUser();
-    // removeToken();
-    // removeUser();
-    navigator("/");
-    setAnchorEl(null);
+    
   }
-
+  
   function handleCloseMenu() {
     setAnchorEl(null);
   }
-
+  
   function handleOpenMenu(event) {
     // console.log(event);
     setAnchorEl(event.currentTarget);
   }
-
+  
   // 登录后显示的
   const userDiv = (
     <>
-      <IconButton onClick={handleOpenMenu}>
-        <Avatar alt="User" src={userInfo?.avatar} />
-      </IconButton>
-      {open && (
-        <Menu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleCloseMenu}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-        >
-          {/* MenuItem 选项 */}
-          <MenuItem onClick={goProfile}>Personal Info</MenuItem>
-          <MenuItem onClick={goFavorites}>My Collection</MenuItem>
-          <MenuItem onClick={goPosted}>My Articles</MenuItem>
-          <MenuItem onClick={goSecurity}>Account security</MenuItem>
-          <MenuItem onClick={logout}>Logout</MenuItem>
-        </Menu>
-      )}
+    <IconButton onClick={handleOpenMenu}>
+    <Avatar alt="User" src={userInfo?.avatar} />
+    </IconButton>
+    {open && (
+      <Menu
+      anchorEl={anchorEl}
+      open={open}
+      onClose={handleCloseMenu}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "right",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      >
+      {/* MenuItem 选项 */}
+      <MenuItem onClick={goProfile}>Personal Info</MenuItem>
+      <MenuItem onClick={goFavorites}>My Collection</MenuItem>
+      <MenuItem onClick={goPosted}>My Articles</MenuItem>
+      <MenuItem onClick={goSecurity}>Account security</MenuItem>
+      <MenuItem onClick={logout}>Logout</MenuItem>
+      </Menu>
+    )}
     </>
   );
-
+  
   // 访客
   const guestDiv = (
     <>
-      <IconButton onClick={handleOpenMenu}>
-        <Avatar alt="User" />
-      </IconButton>
-      {open && (
-        <Menu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleCloseMenu}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-        >
-          {/* MenuItem 选项 */}
-          <MenuItem onClick={goLogin}>Login</MenuItem>
-        </Menu>
-      )}
+    <IconButton onClick={handleOpenMenu}>
+    <Avatar alt="User" />
+    </IconButton>
+    {open && (
+      <Menu
+      anchorEl={anchorEl}
+      open={open}
+      onClose={handleCloseMenu}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "right",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      >
+      {/* MenuItem 选项 */}
+      <MenuItem onClick={goLogin}>Login</MenuItem>
+      </Menu>
+    )}
     </>
   );
-
+  
   return (
     <div className="header-top">
-      <AppBar position="fixed" className="header-app-bar">
-        <Container className="header">
-          {/* 上层：Logo与搜索框 */}
-          <Toolbar className="logo-and-search">
-            {/* 左边的 Logo */}
-            <Typography
-              variant="h5"
-              component="div"
-              sx={{ flexGrow: 1, paddingLeft: 1 }}
-            >
-              {/* <img src={logoURL} alt="Logo" style={{ height: '40px' }} /> */}
-              LOGO
-            </Typography>
-
-            {/* 搜索框 */}
-            <TextField
-              size="small"
-              id="outlined-basic"
-              label="Search"
-              variant="outlined"
-              onChange={inputChange}
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search />
-                    </InputAdornment>
-                  ),
-                },
-              }}
-            />
-          </Toolbar>
-
-          {/* 下层：导航和用户信息 */}
-          <Toolbar variant="dense">
-            {/* 导航和功能按钮 */}
-            <Button
-              onClick={() => goHome()}
-              color="inherit"
-              startIcon={<Home></Home>}
-            >
-              Home
-            </Button>
-            {/* <Button color="inherit">源码分享</Button>
-            <Button color="inherit">教程工具</Button> */}
-
-            {/* 空白填充 */}
-            <Box sx={{ flexGrow: 1 }} />
-
-            {/* <IconButton color="inherit" onClick={() => themeStore.toggleTheme()}>
-          {themeStore.isDarkMode ? (
-            <DarkMode></DarkMode>
-          ) : (
-            <LightMode></LightMode>
-          )}
+    <AppBar position="fixed" className="header-app-bar">
+    <Container className="header">
+    {/* 上层：Logo与搜索框 */}
+    <Toolbar className="logo-and-search">
+    {/* 左边的 Logo */}
+    <Typography
+    variant="h5"
+    component="div"
+    sx={{ flexGrow: 1, paddingLeft: 1 }}
+    >
+    {/* <img src={logoURL} alt="Logo" style={{ height: '40px' }} /> */}
+    LOGO
+    </Typography>
+    
+    {/* 搜索框 */}
+    <TextField
+    size="small"
+    id="outlined-basic"
+    label="Search"
+    variant="outlined"
+    onChange={inputChange}
+    slotProps={{
+      input: {
+        startAdornment: (
+          <InputAdornment position="start">
+          <Search />
+          </InputAdornment>
+        ),
+      },
+    }}
+    />
+    </Toolbar>
+    
+    {/* 下层：导航和用户信息 */}
+    <Toolbar variant="dense">
+    {/* 导航和功能按钮 */}
+    <Button
+    onClick={() => goHome()}
+    color="inherit"
+    startIcon={<Home></Home>}
+    >
+    Home
+    </Button>
+    {/* <Button color="inherit">源码分享</Button>
+      <Button color="inherit">教程工具</Button> */}
+      
+      {/* 空白填充 */}
+      <Box sx={{ flexGrow: 1 }} />
+      
+      {/* <IconButton color="inherit" onClick={() => themeStore.toggleTheme()}>
+        {themeStore.isDarkMode ? (
+        <DarkMode></DarkMode>
+        ) : (
+        <LightMode></LightMode>
+        )}
         </IconButton> */}
-
-            <Button
-              onClick={() => goEditor()}
-              color="inherit"
-              startIcon={<PostAddIcon></PostAddIcon>}
-            >
-              Post an Article
-            </Button>
-
-            {token? userDiv : guestDiv}
-          </Toolbar>
+        
+        <Button
+        onClick={() => goEditor()}
+        color="inherit"
+        startIcon={<PostAddIcon></PostAddIcon>}
+        >
+        Post an Article
+        </Button>
+        
+        {token? userDiv : guestDiv}
+        </Toolbar>
         </Container>
-      </AppBar>
-    </div>
-  );
-}
-
-export default Header;
+        </AppBar>
+        <Snackbar
+        open={openErr}
+        autoHideDuration={3000}
+        onClose={() => setOpenErr(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+        <Alert severity="error" onClose={() => setOpenErr(false)}>
+        {errorMessage}
+        </Alert>
+        </Snackbar>
+        
+        <Snackbar
+        open={openInfo}
+        autoHideDuration={3000}
+        onClose={() => setOpenInfo(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+        <Alert severity="success" onClose={() => setOpenInfo(false)}>
+        {infoMessage}
+        </Alert>
+        </Snackbar>
+        </div>
+        
+      );
+      
+    }
+    
+    export default Header;
+    

@@ -1,10 +1,12 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { getToken as fetchToken, removeToken as clearToken, setToken as saveToken } from "../token";
+import { useStore } from "../../store";
 // import { getToken } from "../token"; 
 
 const AuthContext = createContext();
 
 export const TokenProvider = ({ children }) => {
+    const { userStore } = useStore();
     const [token, setTokenState] = useState(() => {
         return fetchToken() || null; // Ensure getToken is called as a function
     });
@@ -15,6 +17,7 @@ export const TokenProvider = ({ children }) => {
             saveToken(token); // Save token to localStorage or backend
         } else {
             clearToken(); // Clear token from storage
+            userStore.clearUser();
         }
     }, [token]);
     

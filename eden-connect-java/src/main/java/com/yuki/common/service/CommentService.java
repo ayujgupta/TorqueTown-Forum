@@ -5,7 +5,9 @@ import com.yuki.common.domain.ResponseResult;
 import com.yuki.common.domain.entity.Comment;
 import com.yuki.common.domain.entity.Dto.CommentDto;
 
+@SuppressWarnings("rawtypes")
 public interface CommentService {
+    
     ResponseResult AddComment(Comment comment);
 
     ResponseResult deleteComment(Long id);

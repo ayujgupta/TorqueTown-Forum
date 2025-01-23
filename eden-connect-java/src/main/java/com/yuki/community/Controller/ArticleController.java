@@ -1,11 +1,13 @@
 package com.yuki.community.Controller;
 
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.util.StringUtil;
 import com.yuki.common.domain.ResponseResult;
 import com.yuki.common.domain.entity.Article;
 import com.yuki.common.domain.entity.Dto.ArticleDto;
 import com.yuki.common.service.ArticleService;
 import com.yuki.common.utils.JwtUtil;
+import com.yuki.common.utils.UserUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -44,11 +46,19 @@ public class ArticleController {
         Article article = articleService.findOneByArticleId(articleId);
         return ResponseResult.okResult(200,"success",article);
     }
-
+    
     @GetMapping("edit/{id}")
     public ResponseResult editArticleByArticleId(@PathVariable("id") Long articleId){
+        Long currUserId=UserUtil.getUserID();
         Article article = articleService.findOneByArticleId(articleId);
-        return ResponseResult.okResult(200,"success",article);
+        if(currUserId!=null && currUserId==article.getCreate_by()){
+            return ResponseResult.okResult(200,"success",article);
+        }
+        else{
+            return ResponseResult.errorResult(401,"User does not have adequate access to edit this article");
+            
+        }
+        
     }
     
     /**

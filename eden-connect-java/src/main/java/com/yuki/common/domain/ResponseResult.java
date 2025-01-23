@@ -6,6 +6,7 @@ import com.yuki.common.enums.AppHttpCodeEnum;
 import java.io.Serializable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@SuppressWarnings("rawtypes")
 public class ResponseResult<T> implements Serializable {
     private Integer code;
     private String msg;
@@ -32,7 +33,7 @@ public class ResponseResult<T> implements Serializable {
         this.msg = msg;
     }
 
-    @SuppressWarnings("rawtypes")
+    
     public static ResponseResult errorResult(int code, String msg) {
         // ResponseResult result = new ResponseResult();
         return  new ResponseResult().error(code, msg);

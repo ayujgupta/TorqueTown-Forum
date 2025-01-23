@@ -130,10 +130,7 @@ function ArticleDetail() {
   
   
   useEffect(() => {
-    // let token=getToken();
-    console.log("token change+ "+token);
     if(!token){
-      userStore.clearUser();
       setUserInfo(null);
     }
   }, [token]);
